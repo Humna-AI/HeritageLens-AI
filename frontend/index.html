@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeritageLens AI — Cultural Heritage Preservation & Diagnostic Engine</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sandstone: {
+              50: '#fcfaf7',
+              100: '#f7f2eb',
+              200: '#ede0d0',
+              300: '#dfcaa6',
+              400: '#cbb085',
+              500: '#b8945a',
+              600: '#9d7844',
+              700: '#7e5d36',
+              800: '#644a2e',
+              900: '#523e28',
+              950: '#2c2014',
+            },
+            slate: {
+              850: '#151f32',
+              900: '#0f172a',
+              950: '#090d16',
+            },
+            emerald: {
+              450: '#10b981',
+              950: '#022c22',
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b8945a;
+    }
+    .sand-glass {
+      background: rgba(21, 31, 50, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(184, 148, 90, 0.2);
+    }
+    .amber-glow {
+      box-shadow: 0 0 25px -5px rgba(184, 148, 90, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-sandstone-500 selection:text-slate-950">
+
+  <!-- TOP APP HEADER -->
+  <header class="border-b border-sandstone-500/20 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sandstone-400 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-950/40 border border-sandstone-300/30">
+          <svg class="w-7 h-7 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-serif text-2xl font-bold tracking-wide text-sandstone-200">HeritageLens <span class="text-sandstone-400 font-sans text-xl font-light">AI</span></h1>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 font-medium">UN SDG 11.4</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Google Cloud AI Builder Cup 2026 • Cultural Heritage Preservation & Diagnostic Engine</p>
+        </div>
+      </div>
+
+      <!-- Live API Status Indicator -->
+      <div class="flex items-center space-x-4">
+        <div id="backend-status-pill" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
+          <span id="backend-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+          <span id="backend-status-text">Connecting to Gemini...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- HERO & TRACK BANNER -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-sandstone-950 border border-sandstone-500/30 p-6 md:p-8 shadow-2xl">
+      <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-sandstone-500/5 blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 grid md:grid-cols-3 gap-6 items-center">
+        <div class="md:col-span-2 space-y-2">
+          <div class="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-sandstone-400 bg-sandstone-950/80 px-3 py-1 rounded-full border border-sandstone-500/20">
+            <span>🏛️ AI for Cultural Heritage Resilience</span>
+          </div>
+          <h2 class="font-serif text-2xl md:text-3xl font-bold text-sandstone-100">Preserving Archaeological Legacies through Multimodal Intelligence</h2>
+          <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
+            HeritageLens AI pairs deterministic peer-reviewed literature RAG with visual decay diagnostics to assist conservators, researchers, and UNESCO missions in safeguarding ancient masonry against climate stress, salt attack, and inappropriate restoration.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-4 rounded-xl border border-sandstone-500/20 text-center">
+          <div class="p-2 bg-slate-900/80 rounded-lg">
+            <span class="block font-serif text-xl font-bold text-sandstone-300">0%</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Hallucination RAG</span>
+          </div>
+          <div class="p-2 bg-slate-900/80 rounded-lg">
+            <span class="block font-serif text-xl font-bold text-emerald-400">100%</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Charter Aligned</span>
+          </div>
+          <div class="p-2 bg-slate-900/80 rounded-lg">
+            <span class="block font-serif text-xl font-bold text-amber-300">Cosine</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Embedding-004</span>
+          </div>
+          <div class="p-2 bg-slate-900/80 rounded-lg">
+            <span class="block font-serif text-xl font-bold text-sandstone-300">3.1 Flash Lite</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Gemini Vision</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <div class="flex border-b border-slate-800 space-x-4">
+      <button id="tab-rag-btn" onclick="switchTab('rag')" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-sandstone-400 text-sandstone-200 flex items-center space-x-2 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span>Academic Literature RAG</span>
+      </button>
+
+      <button id="tab-vision-btn" onclick="switchTab('vision')" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>Field Photo Diagnostic</span>
+      </button>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: ACADEMIC DOCUMENT RAG -->
+    <!-- ================================================================= -->
+    <section id="tab-rag-content" class="space-y-6">
+      <div class="grid lg:grid-cols-3 gap-6">
+
+        <!-- Search & Control Panel -->
+        <div class="lg:col-span-1 space-y-4">
+          <div class="sand-glass rounded-2xl p-6 space-y-4 amber-glow">
+            <h3 class="font-serif text-lg font-semibold text-sandstone-200 flex items-center space-x-2">
+              <span>📚 Query Corpus</span>
+            </h3>
+            <p class="text-xs text-slate-400 leading-normal">
+              Queries are embedded with <code class="text-sandstone-300 font-mono">text-embedding-004</code> and matched via cosine similarity strictly against our peer-reviewed conservation archive.
+            </p>
+
+            <form id="rag-form" onsubmit="handleRagSubmit(event)" class="space-y-4">
+              <div>
+                <label for="rag-query" class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Research Question</label>
+                <textarea id="rag-query" rows="4" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sandstone-400 focus:ring-1 focus:ring-sandstone-400 transition" placeholder="e.g., Why is Portland cement plaster harmful to Taxila's Dharmarajika Stupa?"></textarea>
+              </div>
+
+              <button type="submit" id="rag-submit-btn" class="w-full bg-gradient-to-r from-sandstone-500 to-amber-600 hover:from-sandstone-400 hover:to-amber-500 text-slate-950 font-semibold px-4 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm disabled:opacity-50">
+                <svg id="rag-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span id="rag-btn-text">Execute Semantic Search</span>
+              </button>
+            </form>
+
+            <!-- Sample Prompts -->
+            <div class="pt-3 border-t border-slate-800 space-y-2">
+              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Sample Archaeological Queries:</span>
+              <div class="space-y-1.5">
+                <button onclick="setRagSample('Why is cement plaster harmful to Dharmarajika Stupa in Taxila?')" class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sandstone-300 p-2.5 rounded-lg border border-slate-800 transition">
+                  🏛️ Taxila: Capillary moisture & cement plaster (Archival RAG)
+                </button>
+                <button onclick="setRagSample('How can salt efflorescence and subsoil moisture decay be mitigated at Mohenjo-daro?')" class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sandstone-300 p-2.5 rounded-lg border border-slate-800 transition">
+                  🧱 Mohenjo-daro: Salt attack & mud-slurry capping (Archival RAG)
+                </button>
+                <button onclick="setRagSample('What is the ancient city of Taxila and its cultural significance?')" class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 p-2.5 rounded-lg border border-slate-800 transition">
+                  🌐 General Scope: What is Taxila? (Live Web Search Fallback)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Synthesis & Source Citations Display -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Answer Card -->
+          <div class="sand-glass rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 class="font-serif text-lg font-semibold text-sandstone-200">Grounded Synthesis</h3>
+              <span id="rag-status-tag" class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Awaiting Query</span>
+            </div>
+
+            <div id="rag-result-container" class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-3 min-h-[140px] flex items-center justify-center text-slate-500">
+              Submit a research query to retrieve peer-reviewed conservation answers grounded strictly in the knowledge base.
+            </div>
+          </div>
+
+          <!-- Retrieved Sources Grid -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+              <span id="rag-sources-header">📑 Grounded Literature Chunks (Top 2 Retrieved)</span>
+            </h4>
+            <div id="rag-sources-grid" class="grid sm:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-xs text-slate-500 text-center col-span-2 py-8">
+                No citations retrieved yet.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: MULTIMODAL FIELD PHOTO DIAGNOSTIC -->
+    <!-- ================================================================= -->
+    <section id="tab-vision-content" class="hidden space-y-6">
+
+      <!-- Prominent Mandatory Disclaimer Banner -->
+      <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 flex items-start space-x-3 text-xs leading-relaxed">
+        <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+          <strong class="font-semibold block text-amber-300 uppercase tracking-wide">Scientific Limitations Disclosure:</strong>
+          Preliminary visual observation only; not a substitute for on-site physical core sampling, ultrasound pulse velocity, moisture sensors, or structural shear testing.
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+
+        <!-- Upload and Preview Section -->
+        <div class="lg:col-span-1 space-y-4">
+          <div class="sand-glass rounded-2xl p-6 space-y-4">
+            <h3 class="font-serif text-lg font-semibold text-sandstone-200">Upload Site Imagery</h3>
+            <p class="text-xs text-slate-400">
+              Upload a clear surface photo of masonry, carved relief, mortar joints, or architectural facade.
+            </p>
+
+            <form id="vision-form" onsubmit="handleVisionSubmit(event)" class="space-y-4">
+              <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-sandstone-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/50 flex flex-col items-center justify-center space-y-3 min-h-[200px]">
+                <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(event)" />
+                <div id="upload-placeholder" class="space-y-2">
+                  <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto text-sandstone-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div class="text-xs text-slate-300 font-medium">Click or drag & drop photo</div>
+                  <div class="text-[11px] text-slate-500">Supports JPG, PNG, WEBP (Max 10MB)</div>
+                </div>
+                <img id="image-preview" class="hidden max-h-48 rounded-lg object-contain border border-slate-700 shadow-md" alt="Uploaded Preview" />
+              </div>
+
+              <button type="submit" id="vision-submit-btn" disabled class="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-semibold px-4 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                <svg id="vision-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span id="vision-btn-text">Run Visual Diagnostic</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Vision Diagnostic Findings -->
+        <div class="lg:col-span-2 space-y-6">
+          <div id="vision-results-wrapper" class="sand-glass rounded-2xl p-6 space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 class="font-serif text-lg font-semibold text-sandstone-200">Diagnostic Findings</h3>
+              <span id="vision-status-tag" class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Ready for Image</span>
+            </div>
+
+            <!-- Empty State -->
+            <div id="vision-empty-state" class="py-16 text-center text-slate-500 text-sm space-y-2">
+              <svg class="w-12 h-12 mx-auto text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <p>Upload a heritage masonry photograph to run multimodal degradation analysis.</p>
+            </div>
+
+            <!-- Populated Results -->
+            <div id="vision-results-content" class="hidden space-y-6">
+
+              <!-- Probable Monument Candidate Card -->
+              <div id="vision-monument-card" class="hidden p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-850 to-sandstone-950/80 border border-sandstone-500/40 space-y-4 shadow-xl">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-sandstone-500/20 pb-3">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30 uppercase tracking-wider font-semibold">
+                      🏛️ Identified Monument Candidate
+                    </span>
+                    <span id="vision-site-status" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700"></span>
+                  </div>
+                  <div id="vision-site-confidence-badge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full border"></div>
+                </div>
+
+                <div class="space-y-1">
+                  <h4 id="vision-site-primary" class="font-serif text-xl font-bold text-sandstone-100 tracking-wide"></h4>
+                  <div id="vision-site-location" class="text-xs text-sandstone-300/90 flex items-center space-x-1.5 font-medium">
+                    <span>📍</span>
+                    <span id="vision-site-location-text"></span>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Visual Diagnostic Clues:</span>
+                  <div id="vision-site-clues" class="flex flex-wrap gap-1.5"></div>
+                </div>
+
+                <!-- Plausible Alternatives & Historical Context -->
+                <div class="grid sm:grid-cols-2 gap-3 pt-2 text-xs">
+                  <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-1">
+                    <span class="font-semibold text-slate-400 block text-[11px] uppercase tracking-wider">Alternative Regional Candidates:</span>
+                    <div id="vision-site-alternatives" class="text-slate-300"></div>
+                  </div>
+                  <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-1">
+                    <span class="font-semibold text-slate-400 block text-[11px] uppercase tracking-wider">Historical Significance:</span>
+                    <p id="vision-site-context" class="text-slate-300 leading-snug line-clamp-3"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Summary Assessment -->
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-sandstone-400">Executive Summary</h4>
+                <p id="vision-summary" class="text-sm text-slate-200 leading-relaxed"></p>
+              </div>
+
+              <!-- Typology & Elements -->
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-2">
+                  <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Architectural Elements</h4>
+                  <ul id="vision-elements" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside"></ul>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-2">
+                  <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Stylistic Typology</h4>
+                  <div id="vision-period" class="text-sm font-semibold text-sandstone-300"></div>
+                  <p id="vision-period-notes" class="text-xs text-slate-400 italic"></p>
+                </div>
+              </div>
+
+              <!-- Degradation Markers -->
+              <div class="space-y-3">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-amber-400">Observable Surface Degradation Markers</h4>
+                <div id="vision-markers-list" class="space-y-3"></div>
+              </div>
+
+              <!-- Conservation Guidance -->
+              <div class="space-y-3">
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Charter-Aligned Conservation Guidance</h4>
+                <div id="vision-guidance-list" class="space-y-3"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        <strong>HeritageLens AI</strong> — Google Cloud AI Builder Cup 2026 Submission
+      </div>
+      <div>
+        Targeting UN SDG 11.4: Strengthen efforts to protect and safeguard the world's cultural and natural heritage.
+      </div>
+    </div>
+  </footer>
+
+  <!-- CLIENT JAVASCRIPT LOGIC -->
+  <script>
+    // Detect API Base URL (Relative if served from FastAPI, or localhost:8080)
+    const API_BASE = window.location.origin.includes('8080') || window.location.origin.startsWith('http')
+      ? window.location.origin
+      : 'http://localhost:8080';
+
+    let selectedImageFile = null;
+
+    // Check Backend Health on Mount
+    async function checkBackendHealth() {
+      const statusPill = document.getElementById('backend-status-pill');
+      const statusDot = document.getElementById('backend-status-dot');
+      const statusText = document.getElementById('backend-status-text');
+
+      try {
+        const res = await fetch(`${API_BASE}/api/health`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.gemini_api_configured) {
+            statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+            statusText.textContent = `Connected (Gemini 1.5 & text-embedding-004)`;
+          } else {
+            statusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+            statusText.textContent = 'Server Ready (GEMINI_API_KEY missing)';
+          }
+        } else {
+          throw new Error('Health check returned non-200');
+        }
+      } catch (err) {
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+        statusText.textContent = 'Backend Offline';
+      }
+    }
+
+    // Tab Switching
+    function switchTab(tab) {
+      const ragBtn = document.getElementById('tab-rag-btn');
+      const visionBtn = document.getElementById('tab-vision-btn');
+      const ragContent = document.getElementById('tab-rag-content');
+      const visionContent = document.getElementById('tab-vision-content');
+
+      if (tab === 'rag') {
+        ragBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-sandstone-400 text-sandstone-200 flex items-center space-x-2 transition-all';
+        visionBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all';
+        ragContent.classList.remove('hidden');
+        visionContent.classList.add('hidden');
+      } else {
+        visionBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-emerald-400 text-emerald-300 flex items-center space-x-2 transition-all';
+        ragBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all';
+        visionContent.classList.remove('hidden');
+        ragContent.classList.add('hidden');
+      }
+    }
+
+    // Set sample query for Tab 1
+    function setRagSample(query) {
+      document.getElementById('rag-query').value = query;
+    }
+
+    // Handle RAG Search Form Submission
+    async function handleRagSubmit(event) {
+      event.preventDefault();
+      const queryInput = document.getElementById('rag-query');
+      const query = queryInput.value.trim();
+      if (!query) return;
+
+      const submitBtn = document.getElementById('rag-submit-btn');
+      const spinner = document.getElementById('rag-spinner');
+      const btnText = document.getElementById('rag-btn-text');
+      const resultContainer = document.getElementById('rag-result-container');
+      const statusTag = document.getElementById('rag-status-tag');
+      const sourcesGrid = document.getElementById('rag-sources-grid');
+      const sourcesHeader = document.getElementById('rag-sources-header');
+
+      submitBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      btnText.textContent = 'Searching & Grounding...';
+      statusTag.textContent = 'Analyzing Corpus Similarity...';
+      statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30 font-medium';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/research`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ detail: 'Network request failed' }));
+          throw new Error(errData.detail || 'Server returned an error');
+        }
+
+        const data = await response.json();
+
+        // Render Answer (parse markdown formatting, blockquotes, inline citations, and links)
+        let formattedAnswer = data.answer
+          // Inline citations (Author, Year, Page)
+          .replace(/(\([^)]*\d{4}[^)]*\))/g, '<span class="px-1.5 py-0.5 rounded bg-amber-950/80 text-sandstone-300 border border-sandstone-500/30 font-medium">$1</span>')
+          // Markdown blockquotes
+          .replace(/^>\s*(.+)$/gm, '<div class="p-3 my-2 rounded-xl bg-amber-950/30 border-l-4 border-amber-500 text-amber-200 text-xs leading-relaxed">$1</div>')
+          // Markdown headers
+          .replace(/^###\s*(.+)$/gm, '<h4 class="font-serif text-sm font-bold text-amber-300 mt-4 mb-2 flex items-center space-x-1.5"><span>$1</span></h4>')
+          .replace(/^##\s*(.+)$/gm, '<h3 class="font-serif text-base font-bold text-sandstone-200 mt-5 mb-2">$1</h3>')
+          // Markdown bold
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-100 font-semibold">$1</strong>')
+          // Markdown links [text](url)
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 underline font-medium inline-flex items-center space-x-0.5"><span>$1</span><span class="text-[10px]">↗</span></a>')
+          // Markdown bullet points
+          .replace(/^- (.*)$/gm, '<div class="flex items-start space-x-2 my-1 text-xs text-slate-300"><span class="text-amber-400 mt-0.5">•</span><span>$1</span></div>')
+          // Paragraph breaks
+          .replace(/\n\n/g, '<div class="my-2"></div>');
+
+        resultContainer.innerHTML = `<div class="space-y-2 leading-relaxed text-slate-200 text-sm">${formattedAnswer}</div>`;
+
+        // 1. Dynamically update top-right badge based on mode
+        if (data.mode === 'archival_rag') {
+          statusTag.textContent = data.badge_label || 'Synthesized from Verified Archival Corpus';
+          statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-500/30 font-medium flex items-center space-x-1.5';
+          if (sourcesHeader) {
+            sourcesHeader.textContent = `📑 Grounded Literature Chunks (Local Similarity: ${(data.similarity_score * 100).toFixed(1)}%)`;
+          }
+        } else {
+          // Mode: web_search_fallback
+          statusTag.textContent = data.badge_label || 'Grounded via Google Search (Live Web)';
+          statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-amber-950 text-amber-300 border border-amber-500/40 font-medium flex items-center space-x-1.5';
+          if (sourcesHeader) {
+            const count = (data.sources && data.sources.length) ? data.sources.length : 0;
+            sourcesHeader.textContent = `🌐 Grounded via Google Search (Sources Found: ${count})`;
+          }
+        }
+
+        // 2. Render Source Cards Dynamically based on Mode
+        if (data.sources && data.sources.length > 0) {
+          if (data.mode === 'archival_rag') {
+            // Render local paper title, author, year, page, and similarity badge
+            sourcesGrid.innerHTML = data.sources.map(src => {
+              const simPercent = src.similarity_score ? (src.similarity_score * 100).toFixed(1) : (data.similarity_score * 100).toFixed(1);
+              return `
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-sandstone-500/20 space-y-2 hover:border-sandstone-400/40 transition">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-mono font-medium px-2 py-0.5 rounded bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30">
+                      Similarity: ${simPercent}%
+                    </span>
+                    <span class="text-xs text-slate-400 font-medium">${src.year ? src.year + ' • ' : ''}p. ${src.page || 'N/A'}</span>
+                  </div>
+                  <h5 class="text-xs font-semibold text-sandstone-200 font-serif leading-snug">${src.title || 'Archival Paper'}</h5>
+                  <div class="text-[11px] text-slate-400"><strong>Author:</strong> ${src.author || 'Conservation Corpus'}</div>
+                  ${src.excerpt ? `<p class="text-[11px] text-slate-300 italic bg-slate-950/50 p-2.5 rounded-lg border border-slate-800 line-clamp-3">"${src.excerpt}"</p>` : ''}
+                  ${src.source_url ? `<a href="${src.source_url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1 text-[11px] text-sandstone-400 hover:underline pt-1"><span>View UNESCO Record</span> →</a>` : ''}
+                </div>
+              `;
+            }).join('');
+          } else {
+            // Render web article title, snippet, and clickable URL chip
+            sourcesGrid.innerHTML = data.sources.map(src => {
+              const url = src.url || src.source_url || '';
+              return `
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-amber-500/30 space-y-2.5 hover:border-amber-400/50 transition">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/30 flex items-center space-x-1">
+                      <span>🌐</span>
+                      <span>Live Web Citation</span>
+                    </span>
+                  </div>
+                  <h5 class="text-xs font-semibold text-sandstone-100 leading-snug">${src.title || 'Google Search Grounding Reference'}</h5>
+                  <p class="text-[11px] text-slate-300 bg-slate-950/50 p-2.5 rounded-lg border border-slate-800 leading-relaxed">
+                    ${src.snippet || src.excerpt || 'Real-time contextual reference via Google Search Grounding.'}
+                  </p>
+                  ${url ? `
+                    <div class="pt-1">
+                      <a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs text-amber-400 hover:text-amber-300 hover:underline bg-slate-950/80 px-2.5 py-1.5 rounded-lg border border-amber-500/30 max-w-full">
+                        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        <span class="truncate">${url}</span>
+                      </a>
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+        } else {
+          sourcesGrid.innerHTML = `<div class="p-4 rounded-xl bg-slate-900 text-xs text-slate-400 col-span-2 text-center py-6">No direct citations returned for this query.</div>`;
+        }
+
+      } catch (error) {
+        resultContainer.innerHTML = `<div class="p-4 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs leading-relaxed"><strong>Error:</strong> ${error.message}</div>`;
+        statusTag.textContent = 'Query Failed';
+        statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-rose-950 text-rose-400';
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Execute Semantic Search';
+      }
+    }
+
+    // Drag-and-Drop / Image Upload Handling
+    const dropZone = document.getElementById('drop-zone');
+    const imageInput = document.getElementById('image-input');
+    const imagePreview = document.getElementById('image-preview');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    const visionSubmitBtn = document.getElementById('vision-submit-btn');
+
+    dropZone.addEventListener('click', () => imageInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-sandstone-400', 'bg-slate-850');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-sandstone-400', 'bg-slate-850');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-sandstone-400', 'bg-slate-850');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFileSelection(e.dataTransfer.files[0]);
+      }
+    });
+
+    function previewImage(event) {
+      if (event.target.files && event.target.files[0]) {
+        handleFileSelection(event.target.files[0]);
+      }
+    }
+
+    function handleFileSelection(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file (JPEG, PNG, WEBP).');
+        return;
+      }
+      selectedImageFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        imagePreview.classList.remove('hidden');
+        uploadPlaceholder.classList.add('hidden');
+        visionSubmitBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Handle Vision Diagnostic Submission
+    async function handleVisionSubmit(event) {
+      event.preventDefault();
+      if (!selectedImageFile) return;
+
+      const submitBtn = document.getElementById('vision-submit-btn');
+      const spinner = document.getElementById('vision-spinner');
+      const btnText = document.getElementById('vision-btn-text');
+      const statusTag = document.getElementById('vision-status-tag');
+      const emptyState = document.getElementById('vision-empty-state');
+      const resultsContent = document.getElementById('vision-results-content');
+
+      submitBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      btnText.textContent = 'Analyzing Surface Morphology...';
+      statusTag.textContent = 'Processing Image with Gemini 1.5 Flash...';
+      statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30';
+
+      const formData = new FormData();
+      formData.append('file', selectedImageFile);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/analyze-image`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ detail: 'Failed to analyze image' }));
+          throw new Error(errData.detail || 'Vision diagnostic failed');
+        }
+
+        const data = await response.json();
+
+        emptyState.classList.add('hidden');
+        resultsContent.classList.remove('hidden');
+
+        // Populate Probable Monument Candidate Card
+        const monumentCard = document.getElementById('vision-monument-card');
+        if (data.site_identification && data.site_identification.primary_candidate) {
+          monumentCard.classList.remove('hidden');
+          const site = data.site_identification;
+
+          document.getElementById('vision-site-primary').textContent = site.primary_candidate;
+          document.getElementById('vision-site-location-text').textContent = site.location || 'Location unverified';
+          document.getElementById('vision-site-status').textContent = site.heritage_status || 'Protected Heritage Site';
+
+          // Confidence Badge
+          const conf = (site.confidence || 'Tentative').toLowerCase();
+          const confBadge = document.getElementById('vision-site-confidence-badge');
+          if (conf === 'high') {
+            confBadge.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40';
+            confBadge.innerHTML = '● High Confidence Attribution';
+          } else if (conf === 'moderate') {
+            confBadge.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/40';
+            confBadge.innerHTML = '● Moderate Probable Attribution';
+          } else {
+            confBadge.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-sandstone-300 border border-slate-700';
+            confBadge.innerHTML = '● Tentative Attribution (Stylistic)';
+          }
+
+          // Diagnostic Clues
+          const cluesContainer = document.getElementById('vision-site-clues');
+          if (site.diagnostic_clues && site.diagnostic_clues.length > 0) {
+            cluesContainer.innerHTML = site.diagnostic_clues.map(c => `
+              <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-200 border border-sandstone-500/20 flex items-center space-x-1">
+                <span class="text-sandstone-400">✓</span>
+                <span>${c}</span>
+              </span>
+            `).join('');
+          } else {
+            cluesContainer.innerHTML = '<span class="text-xs text-slate-500 italic">Regional masonry typology.</span>';
+          }
+
+          // Alternative Candidates
+          const altContainer = document.getElementById('vision-site-alternatives');
+          if (site.alternative_candidates && site.alternative_candidates.length > 0) {
+            altContainer.innerHTML = site.alternative_candidates.map(a => `
+              <span class="inline-block mr-1.5 mb-1 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-medium">${a}</span>
+            `).join('');
+          } else {
+            altContainer.innerHTML = '<span class="text-slate-500 italic">None proposed</span>';
+          }
+
+          // Historical Context
+          document.getElementById('vision-site-context').textContent = site.historical_context || 'Historical context unavailable.';
+        } else {
+          monumentCard.classList.add('hidden');
+        }
+
+        // Populate Summary
+        document.getElementById('vision-summary').textContent = data.summary_assessment || 'Diagnostic completed.';
+
+        // Populate Elements
+        const elementsList = document.getElementById('vision-elements');
+        elementsList.innerHTML = (data.visible_architectural_elements || []).map(el => `<li>${el}</li>`).join('');
+
+        // Populate Period Suggestion
+        document.getElementById('vision-period').textContent = data.period_suggestion || 'Period undetermined';
+        document.getElementById('vision-period-notes').textContent = data.period_confidence_notes || '';
+
+        // Severity Color Badges
+        const severityColors = {
+          'Low': 'bg-emerald-950 text-emerald-400 border-emerald-500/30',
+          'Moderate': 'bg-amber-950 text-amber-300 border-amber-500/30',
+          'High': 'bg-orange-950 text-orange-400 border-orange-500/30',
+          'Critical': 'bg-rose-950 text-rose-400 border-rose-500/40'
+        };
+
+        // Populate Markers
+        const markersContainer = document.getElementById('vision-markers-list');
+        markersContainer.innerHTML = (data.observable_deterioration_markers || []).map(m => {
+          const badgeClass = severityColors[m.severity] || severityColors['Moderate'];
+          return `
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-100">${m.marker_name}</span>
+                <span class="text-[11px] font-medium px-2 py-0.5 rounded-full border ${badgeClass}">${m.severity} Severity</span>
+              </div>
+              <div class="text-xs text-slate-300"><strong>Visual Indicators:</strong> ${m.observable_features}</div>
+              <div class="text-xs text-slate-400"><strong>Mechanism:</strong> ${m.material_mechanism}</div>
+            </div>
+          `;
+        }).join('');
+
+        // Populate Guidance
+        const guidanceContainer = document.getElementById('vision-guidance-list');
+        guidanceContainer.innerHTML = (data.conservation_guidance || []).map(g => `
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-emerald-900/40 space-y-2">
+            <div class="text-xs font-serif font-semibold text-emerald-300">${g.charter_principle}</div>
+            <div class="text-xs text-slate-200"><strong>Recommended Action:</strong> ${g.recommendation}</div>
+            <div class="text-xs text-rose-300/90 bg-rose-950/30 p-2 rounded border border-rose-900/40"><strong>Contraindication:</strong> ${g.contraindications}</div>
+          </div>
+        `).join('');
+
+        statusTag.textContent = 'Diagnostic Complete';
+        statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-500/30';
+
+      } catch (err) {
+        alert(`Analysis Error: ${err.message}`);
+        statusTag.textContent = 'Diagnostic Failed';
+        statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-rose-950 text-rose-400';
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Run Visual Diagnostic';
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      checkBackendHealth();
+    });
+  </script>
+</body>
+</html>

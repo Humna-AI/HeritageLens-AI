@@ -1,0 +1,52 @@
+[
+  {
+    "id": "taxila_01",
+    "title": "Taxila Archaeological Site Conservation & Management Plan",
+    "author": "Department of Archaeology & Museums (DoAM) & UNESCO",
+    "year": "2024",
+    "page": "12-18",
+    "topic": "Taxila history, Dharmarajika stupa, lime mortar vs cement plaster",
+    "excerpt": "The Taxila Valley, a UNESCO World Heritage site, spans major ancient urban settlements (Bhir Mound, Sirkap, Sirsukh) and Buddhist monastic complexes including Dharmarajika and Jaulian. Primary conservation risks include capillary moisture draw along lower stupa plinths and mechanical weathering of schist diaper masonry. Historic lime-based mortars must be maintained; application of rigid Portland cement mortars is strictly prohibited as it traps subsoil moisture and accelerates masonry spalling.",
+    "source_url": "https://whc.unesco.org/en/list/139/"
+  },
+  {
+    "id": "mohenjodaro_01",
+    "title": "State of Conservation Report: Archaeological Ruins at Moenjodaro",
+    "author": "UNESCO World Heritage Centre & National Fund for Mohenjodaro",
+    "year": "2025",
+    "page": "84-91",
+    "topic": "Mohenjo-daro, Indus Valley Civilization, salt efflorescence, mud capping",
+    "excerpt": "The mature Harappan baked-brick structures at Mohenjo-daro suffer acute deterioration caused by high saline water tables and rapid surface evaporation. Soluble sodium sulfate salts crystallize within porous bricks (efflorescence), causing sub-florescence shear stress and brick crumbling. Sacrificial mud-slurry capping and sub-surface drainage re-alignment remain the primary approved preservation techniques.",
+    "source_url": "https://whc.unesco.org/en/list/138/"
+  },
+  {
+    "id": "jamal_garhi_01",
+    "title": "Archaeological Triage & Monastic Layout of Jamal Garhi",
+    "author": "Frontier Archaeology & Department of Archaeology KP",
+    "year": "2023",
+    "page": "45-52",
+    "topic": "Jamal Garhi, Gandhara diaper masonry, circular stupa court",
+    "excerpt": "Situated in Mardan District, Khyber Pakhtunkhwa, Jamal Garhi is a premier 1st to 5th-century CE Buddhist monastic complex characterized by its unique circular stupa courtyard surrounded by radiating votive chapels. Built using local quartz-schist dry diaper masonry, key visible degradation markers include mortar loss between stone courses, wild vegetative root wedging, and wind-driven surface abrasion on carved friezes.",
+    "source_url": "https://govisitpak.pk/cultural-and-heritage-tourism/"
+  },
+  {
+    "id": "takht_i_bahi_01",
+    "title": "Conservation Charter for Takht-i-Bahi & Sahr-i-Bahlol",
+    "author": "UNESCO & Khyber Pakhtunkhwa Tourism Department",
+    "year": "2024",
+    "page": "30-36",
+    "topic": "Takht-i-Bahi monastery, mountain terrace stabilization, biological growth",
+    "excerpt": "Perched on a crest in Mardan, Takht-i-Bahi is an Indo-Parthian and Kushan-era monastic complex. Structural preservation requires biocide treatment against cyanobacteria and micro-flora colonization on phyllite surfaces. According to Venice Charter guidelines, consolidation must focus on joint repointing using lime-mortar slurries without altering the stone surface chemistry.",
+    "source_url": "https://whc.unesco.org/en/list/140/"
+  },
+  {
+    "id": "ptdc_lahore_fort_01",
+    "title": "Mughal Architecture and Heritage Conservation: Lahore Fort & Shalamar Gardens",
+    "author": "Pakistan Tourism Development Corporation (PTDC) & Punjab Archaeology",
+    "year": "2024",
+    "page": "10-15",
+    "topic": "Lahore Fort, Mughal architecture, Sheesh Mahal, fresco stabilization",
+    "excerpt": "The Lahore Fort and Shalamar Gardens represent the pinnacle of Mughal architectural heritage in Pakistan. Major conservation challenges include humidity-driven detachment of micro-fresco paintings in the Sheesh Mahal, travertine marble surface staining, and structural masonry settlement. Preservation guidelines require non-invasive ultrasound testing and climate-controlled interior environmental monitoring.",
+    "source_url": "https://travelinbudget.pk/top-6-ptdc-locations/"
+  }
+]

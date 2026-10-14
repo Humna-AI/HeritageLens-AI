@@ -1,0 +1,34 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+**/.venv/
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+**/__pycache__/
+
+# Environment variables & secrets
+.env
+.env.*
+*.env
+**/.env
+backend/.env
+!.env.example
+!backend/.env.example
+
+# IDE
+.vscode/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Operating system artifacts
+.DS_Store
+Thumbs.db
