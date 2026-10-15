@@ -6,13 +6,13 @@
 
 ---
 
-## 🌟 Executive Overview
+## Executive Overview
 
 **HeritageLens AI** is a production-grade, AI-powered cultural heritage preservation and diagnostic platform built to assist archaeological curators, architectural conservators, and field preservationists. By pairing deterministic literature grounding with multimodal surface deterioration diagnostics, HeritageLens AI prevents irreversible damage to ancient monuments caused by incompatible modern restorations, microclimate salt efflorescence, and biological colonization.
 
 ---
 
-## 🚀 Key Capabilities
+## Key Capabilities
 
 ### 1. Academic Document RAG (*Zero-Hallucination Retrieval-Augmented Generation*)
 - **Semantic Vector Store:** Queries are vectorized using Google's `models/text-embedding-004` (with fallback to `models/gemini-embedding-001`).
@@ -29,7 +29,7 @@
 
 ---
 
-## 🏗️ System Architecture & Technology Stack
+## System Architecture & Technology Stack
 
 | Layer | Technology / Service | Purpose |
 | :--- | :--- | :--- |
@@ -64,7 +64,7 @@ heritagelens-ai/
 
 ---
 
-## ☁️ Live Production Deployment on Google Cloud Run
+## Live Production Deployment on Google Cloud Run
 
 The production deployment runs containerized on Google Cloud Run in the **`asia-southeast1`** (Singapore) region with secure API key mounting via **Google Secret Manager**.
 
