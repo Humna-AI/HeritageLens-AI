@@ -1,4 +1,3 @@
-```markdown
 # 🏛️ HeritageLens AI
 
 > **Google Cloud AI Builder Cup 2026** — *Sustainability & Social Impact Track*  
