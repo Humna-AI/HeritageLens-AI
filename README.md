@@ -1,28 +1,47 @@
+```markdown
 # 🏛️ HeritageLens AI
 
 > **Google Cloud AI Builder Cup 2026** — *Sustainability & Social Impact Track*  
-> **Target Alignment:** [UN SDG 11.4](https://sdgs.un.org/goals/goal11#targets): *Strengthen efforts to protect and safeguard the world’s cultural and natural heritage.*
+> **Target Alignment:** UN SDG 11.4 — *Strengthen efforts to protect and safeguard the world’s cultural and natural heritage.*  
+> **Live Production URL:** [https://heritagelens-ai-93118475309.asia-southeast1.run.app](https://heritagelens-ai-93118475309.asia-southeast1.run.app)
 
 ---
 
 ## 🌟 Executive Overview
 
-**HeritageLens AI** is an AI-powered cultural heritage preservation and diagnostic platform designed to assist archaeological curators, architectural conservators, and UNESCO field missions. It combines **deterministic literature grounding** with **multimodal surface deterioration diagnostics** to prevent irreversible damage to ancient monuments caused by incompatible modern restorations, climate-induced salt efflorescence, and biological attacks.
+**HeritageLens AI** is a production-grade, AI-powered cultural heritage preservation and diagnostic platform built to assist archaeological curators, architectural conservators, and field preservationists. By pairing deterministic literature grounding with multimodal surface deterioration diagnostics, HeritageLens AI prevents irreversible damage to ancient monuments caused by incompatible modern restorations, microclimate salt efflorescence, and biological colonization.
 
 ---
 
 ## 🚀 Key Capabilities
 
-1. **Academic Document RAG (Zero-Hallucination Retrieval-Augmented Generation)**:
-   - Queries are vectorized using Google's `models/text-embedding-004`.
-   - Semantic retrieval computes cosine similarity over a verified corpus of peer-reviewed conservation papers, UNESCO charter declarations (Venice Charter 1964, Burra Charter), and archaeological field excavation reports.
-   - Powered by **Gemini 1.5 Flash** under strict zero-temperature constraints requiring exact inline academic citations `(Author, Year, p. Page)` and unambiguous uncertainty disclosure when documentary evidence is absent.
+### 1. Academic Document RAG (*Zero-Hallucination Retrieval-Augmented Generation*)
+- **Semantic Vector Store:** Queries are vectorized using Google's `models/text-embedding-004` (with fallback to `models/gemini-embedding-001`).
+- **Verified Archival Corpus:** Computes cosine similarity over a curated dataset of peer-reviewed conservation papers, UNESCO charter declarations (*Venice Charter 1964, Burra Charter*), and archaeological excavation reports.
+- **Grounded Synthesis:** Powered by **Gemini 1.5 Flash** under strict zero-temperature grounding constraints requiring exact inline academic citations `(Author, Year, p. Page)`.
+- **Live Search Fallback:** If query similarity falls below threshold or local records lack coverage, it seamlessly transitions to **Google Search Grounding** while retaining source attribution.
 
-2. **Multimodal Preservation Analysis (Computer Vision Diagnostic)**:
-   - Field practitioners upload high-resolution surface imagery of masonry, brickwork, or carved reliefs.
-   - Evaluates observable degradation markers (subflorescence/salt crusting, biological colonization, schist foliation delamination, mortar washouts).
-   - Generates ICOMOS/UNESCO-aligned conservation guidance and highlights critical contraindications (e.g., prohibition of impermeable Portland cement on porous historic limestone).
-   - Enforces an uncompromising scientific disclosure stating that visual computer vision is a non-invasive surface screening tool, not a substitute for subterranean structural testing.
+### 2. Multimodal Preservation Analysis (*Computer Vision Diagnostic*)
+- **Field Imagery Analysis:** Field practitioners upload high-resolution photos of masonry, brick bonds, or carved reliefs.
+- **Probable Site Identification:** Identifies candidate monuments, locations, regional typologies, and diagnostic architectural clues (*e.g., diaper schist masonry, circular stupa court layout*).
+- **Deterioration Profiling:** Evaluates surface degradation markers (*salt efflorescence, biological colonization, spalling, mortar washout*) with severity ratings.
+- **Charter-Aligned Guidance:** Generates non-invasive restoration guidance alongside strict contraindications (*e.g., prohibition of Portland cement on porous stone*).
+- **Mandatory Disclaimer:** Enforces scientific disclosures highlighting that surface computer vision is a preliminary screening tool, not a substitute for subsurface structural testing.
+
+---
+
+## 🏗️ System Architecture & Technology Stack
+
+| Layer | Technology / Service | Purpose |
+| :--- | :--- | :--- |
+| **Cloud Hosting** | **Google Cloud Run** | Serverless, containerized deployment in `asia-southeast1` |
+| **Image Registry** | **Google Container Registry (GCR)** | Automated container artifact management |
+| **Secrets Management** | **Google Secret Manager** | Secure, zero-plaintext storage for `GEMINI_API_KEY` |
+| **Build Pipeline** | **Google Cloud Build** | Remote container build and image packaging |
+| **AI / LLM Engine** | **Gemini 1.5 Flash** (`google-generativeai`) | Grounded RAG synthesis, web search grounding, multimodal vision analysis |
+| **Embeddings** | `text-embedding-004` / `gemini-embedding-001` | High-dimensional semantic vector indexing |
+| **Backend Framework** | **FastAPI** + **Uvicorn** | High-performance Python async web framework |
+| **Frontend UI** | **HTML5** + **Tailwind CSS** + **JavaScript** | Single-container, sandstone/slate aesthetic UI dashboard |
 
 ---
 
@@ -31,160 +50,151 @@
 ```text
 heritagelens-ai/
 ├── backend/
-│   ├── main.py                     # FastAPI application, Gemini RAG & Vision pipelines
-│   ├── requirements.txt            # Python dependencies (FastAPI, GenAI, Pillow, NumPy)
-│   ├── Dockerfile                  # Lightweight Python 3.11-slim container for Cloud Run
+│   ├── main.py                 # FastAPI app, RAG engine, Gemini Vision pipeline & static file server
+│   ├── requirements.txt        # Backend dependencies (FastAPI, GenAI, Pillow, NumPy)
 │   └── data/
-│       └── knowledge_base.json     # Curated peer-reviewed conservation papers & charters
+│       └── knowledge_base.json # Verified peer-reviewed conservation papers & UNESCO charters
 ├── frontend/
-│   └── index.html                  # Single-page dashboard (Sandstone/Slate UI, Tailwind CSS)
-└── README.md                       # Comprehensive deployment & architecture documentation
+│   └── index.html              # Responsive web dashboard (Tailwind CSS, Sandstone/Slate UI)
+├── Dockerfile                  # Production multi-stage Docker build for Cloud Run deployment
+├── requirements.txt            # Root dependencies declaration
+├── .dockerignore               # Ignores local venv, cache, git, and local environment files
+└── README.md                   # Complete documentation
+
 ```
+
+---
+
+## ☁️ Live Production Deployment on Google Cloud Run
+
+The production deployment runs containerized on Google Cloud Run in the **`asia-southeast1`** (Singapore) region with secure API key mounting via **Google Secret Manager**.
+
+### Deployment Commands Executed
+
+1. **Secret Manager Configuration:**
+```cmd
+echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets create GEMINI_API_KEY --data-file=-
+
+gcloud secrets add-iam-policy-binding GEMINI_API_KEY \
+    --member="serviceAccount:93118475309-compute@developer.gserviceaccount.com" \
+    --role="roles/secretmanager.secretAccessor"
+
+```
+
+
+2. **Container Packaging via Cloud Build:**
+```cmd
+gcloud builds submit . --tag gcr.io/heritagelens-ai-pk-2026/heritagelens-ai
+
+```
+
+
+3. **Cloud Run Production Release:**
+```cmd
+gcloud run deploy heritagelens-ai \
+    --image gcr.io/heritagelens-ai-pk-2026/heritagelens-ai \
+    --region asia-southeast1 \
+    --platform managed \
+    --allow-unauthenticated \
+    --timeout=300s \
+    --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest"
+
+```
+
+
 
 ---
 
 ## 🛠️ Local Development Setup
 
 ### 1. Prerequisites
-- Python 3.10 or 3.11 installed
-- A valid [Google Gemini API Key](https://aistudio.google.com/)
 
-### 2. Clone and Navigate to the Repository
+* Python 3.10 or 3.11
+* Google Gemini API Key
+
+### 2. Installation
+
 ```bash
+# Clone repository
+git clone [https://github.com/your-username/heritagelens-ai.git](https://github.com/your-username/heritagelens-ai.git)
 cd heritagelens-ai
-```
 
-### 3. Create and Activate a Virtual Environment
-```bash
-# On Linux / macOS:
-python3 -m venv venv
-source venv/bin/activate
+# Create & activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# On Windows (PowerShell):
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-```
-
-### 4. Install Dependencies
-```bash
+# Install dependencies
 pip install --upgrade pip
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
+
 ```
 
-### 5. Configure Your Gemini API Key
+### 3. Environment Setup & Execution
+
 ```bash
-# On Linux / macOS:
-export GEMINI_API_KEY="your-actual-gemini-api-key"
+# Set Gemini API Key
+export GEMINI_API_KEY="your-actual-gemini-api-key"   # On Windows (cmd): set GEMINI_API_KEY=your_key
 
-# On Windows (PowerShell):
-$env:GEMINI_API_KEY="your-actual-gemini-api-key"
+# Launch server from project root
+python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8080
 
-# On Windows (CMD):
-set GEMINI_API_KEY=your-actual-gemini-api-key
 ```
 
-### 6. Launch the Local FastAPI Server
-```bash
-cd backend
-uvicorn main:app --reload --host 0.0.0.0 --port 8080
-```
-
-### 7. Access the Application
-- **Frontend Dashboard:** Open `http://localhost:8080/` in your browser.
-- **Interactive OpenAPI Documentation:** Open `http://localhost:8080/docs`.
-- Alternatively, you can open `frontend/index.html` directly in your browser.
+Access locally at `http://localhost:8080/`.
 
 ---
 
-## ☁️ Production Deployment on Google Cloud Run
+## 🧪 Testing & API Verification
 
-Deploy HeritageLens AI as a serverless container on **Google Cloud Run** targeting the `asia-southeast1` (Singapore) region.
+### Scenario A: Testing Academic Document RAG Endpoint
 
-### 1. Authenticate with Google Cloud SDK
-```bash
-gcloud auth login
-gcloud config set project YOUR_GCP_PROJECT_ID
-```
-
-### 2. Enable Required Google Cloud APIs
-```bash
-gcloud services enable \
-    run.googleapis.com \
-    artifactregistry.googleapis.com \
-    cloudbuild.googleapis.com
-```
-
-### 3. Deploy to Cloud Run (Targeting `asia-southeast1`)
-Execute the following single command from the project root:
+**Request:**
 
 ```bash
-gcloud run deploy heritagelens-backend \
-    --source ./backend \
-    --region asia-southeast1 \
-    --platform managed \
-    --allow-unauthenticated \
-    --port 8080 \
-    --memory 1Gi \
-    --cpu 1 \
-    --set-env-vars GEMINI_API_KEY="YOUR_ACTUAL_GEMINI_API_KEY"
-```
-
-> **Security Best Practice for Production:**  
-> Store your API key in **Google Secret Manager** and mount it into Cloud Run:
-> ```bash
-> echo -n "YOUR_API_KEY" | gcloud secrets create gemini-api-key --data-file=-
-> gcloud secrets add-iam-policy-binding gemini-api-key \
->     --member="serviceAccount:YOUR_PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
->     --role="roles/secretmanager.secretAccessor"
->
-> gcloud run deploy heritagelens-backend \
->     --source ./backend \
->     --region asia-southeast1 \
->     --set-secrets GEMINI_API_KEY=gemini-api-key:latest
-> ```
-
----
-
-## 🧪 Testing & Verification Guide
-
-### Scenario A: Testing Academic Document RAG
-Execute a POST request to `/api/research`:
-
-```bash
-curl -X POST "http://localhost:8080/api/research" \
+curl -X POST "[https://heritagelens-ai-93118475309.asia-southeast1.run.app/api/research](https://heritagelens-ai-93118475309.asia-southeast1.run.app/api/research)" \
      -H "Content-Type: application/json" \
      -d '{"query": "Why is cement plaster harmful to Dharmarajika Stupa in Taxila?"}'
+
 ```
 
 **Expected Response Features:**
-- Vector similarity score calculated via `models/text-embedding-004`.
-- Grounded explanation detailing how impervious Portland cement traps capillary ground moisture and causes destructive subflorescence spalling.
-- Inline citation: `(Marshall, J. & Khan, F. A., 2018, p. 142-146)`.
 
-### Scenario B: Testing Multimodal Field Photo Diagnostic
-Send a heritage image to `/api/analyze-image`:
+* Cosine similarity calculated via `text-embedding-004`.
+* Grounded scientific explanation detailing how impermeable cement traps capillary ground moisture and drives subflorescence spalling.
+* Inline citation format: `(Marshall, J. & Khan, F. A., 2018, p. 142-146)`.
+
+### Scenario B: Testing Multimodal Image Diagnostic Endpoint
+
+**Request:**
 
 ```bash
-curl -X POST "http://localhost:8080/api/analyze-image" \
+curl -X POST "[https://heritagelens-ai-93118475309.asia-southeast1.run.app/api/analyze-image](https://heritagelens-ai-93118475309.asia-southeast1.run.app/api/analyze-image)" \
      -H "accept: application/json" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@/path/to/heritage_site_photo.jpg"
+
 ```
 
-**Expected Structured JSON Response:**
-- `visible_architectural_elements`: Extracted masonry typologies and features.
-- `observable_deterioration_markers`: Categorized decay patterns with severity grades.
-- `limitations_disclaimer`: Mandatory scientific qualification banner.
-- `conservation_guidance`: Actionable, charter-compliant interventions (e.g. Venice Charter 1964 Art. 10).
+**Expected JSON Response:**
+
+* `site_identification`: Probable site name (*e.g., Jamal Garhi / Takht-i-Bahi*), location, and visual diagnostic clues.
+* `observable_deterioration_markers`: Categorized decay patterns with severity grades.
+* `conservation_guidance`: Charter-compliant non-invasive interventions (*Venice Charter 1964 Art. 10*).
+* `limitations_disclaimer`: Scientific disclosure banner.
 
 ---
 
-## 📜 Ethical Disclosures & Charters
+## 📜 Ethical Disclosures & Standards Alignment
 
-1. **Non-Invasive Diagnostic Screen**: HeritageLens AI is designed strictly as a preliminary visual observation aid and should never replace on-site physical core drilling, mortar petrography, or dynamic structural analysis.
-2. **Charter Alignment**: Recommendations strictly enforce principles of material reversibility and compatibility established by the **ICOMOS Venice Charter (1964)** and the **ICOMOS Charter on the Conservation of Historic Stone Structures (2004)**.
+1. **Non-Invasive Diagnostic Screen:** HeritageLens AI is designed exclusively as a preliminary visual observation aid and does not replace on-site physical core drilling, mortar petrography, or dynamic structural testing.
+2. **ICOMOS & UNESCO Charter Alignment:** Recommendations strictly enforce principles of material reversibility and compatibility established by the **ICOMOS Venice Charter (1964)** and the **ICOMOS Principles for the Analysis, Conservation and Structural Restoration of Architectural Heritage (2003)**.
 
 ---
 
 ## 📄 License
-Released under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0). Built for the **Google Cloud AI Builder Cup 2026**.
+
+Released under the **Apache 2.0 License**. Built for the **Google Cloud AI Builder Cup 2026**.
+
+```
+
+```
