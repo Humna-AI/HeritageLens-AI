@@ -12,15 +12,26 @@ HeritageLens AI helps archaeological curators, architectural conservators and fi
 
 Ancient masonry across Pakistan (Taxila, Moenjodaro, Takht-i-Bahi, Lahore Fort and many smaller sites) is deteriorating from salt attack, rising damp, biological growth and, most damagingly, **well-meant repairs with incompatible modern materials** such as Portland cement. Conservation guidance exists, but it is scattered across site management plans, UNESCO reports and international charters, and many field teams have no quick way to consult it or to triage what they see on site.
 
+## Our approach: preserve the knowledge, not only the stones
+
+Heritage is lost in two ways: the monuments decay, and the **knowledge about how to understand and care for them fades** as papers, reports and expert memory are scattered or forgotten. HeritageLens AI addresses both.
+
+- **Published knowledge first.** Instead of answering from generic, AI-generated web text, the app answers conservation questions from a curated knowledge base of **published, citable documents** (site management plans, UNESCO conservation reports and charters), and shows the exact source, year and page it used. This makes it useful to researchers and academics, who need to know *where* a statement comes from.
+- **A growing collective memory.** Each document added to the knowledge base becomes searchable, citable knowledge that the AI can draw on, so expertise is captured in one place instead of fading with time. The knowledge base is retrieval-based (the model is not retrained), so adding or correcting a source takes effect immediately and every answer stays traceable.
+- **General heritage knowledge when the archive has no answer.** If a question falls outside the archive, the app answers through Google Search grounding and says clearly that it did so, so users always know whether an answer came from the curated archive or from the open web.
+
 ## What it does
 
-### 1. Academic literature search (RAG)
-- Your question is embedded with Google's Gemini embedding model and matched by **cosine similarity** against a curated conservation knowledge base.
-- If a close match is found (similarity ≥ `SIMILARITY_THRESHOLD`, default **0.65**), **Gemini** answers *only* from the retrieved excerpts, at temperature 0, with inline citations in the form `(Author, Year, p. Page)`. The top sources are shown beside the answer with their similarity scores.
-- If the knowledge base cannot answer, the app switches automatically to **Gemini with Google Search grounding** and clearly labels the answer as live web search, listing the sources it used.
+### 1. Heritage questions and literature search (RAG)
+- Your question is embedded with Google's Gemini embedding model and matched by **cosine similarity** against the curated knowledge base.
+- **Archive answers (conservation questions):** if a close match is found (similarity ≥ `SIMILARITY_THRESHOLD`, default **0.65**), **Gemini** answers *only* from the retrieved excerpts, at temperature 0, with inline citations in the form `(Author, Year, p. Page)`. The top sources are shown beside the answer with their similarity scores. Example: *"Why is cement plaster harmful to Dharmarajika Stupa?"*
+- **General heritage answers (everything else):** if the archive cannot answer, the app switches automatically to **Gemini with Google Search grounding**, labels the answer as live web search, and lists the sources it used. Example: *"What is Taxila?"*, *"Which language did the Buddha speak?"*, or *"What are the accepted principles for preserving ancient masonry?"*
 
 ### 2. Field photo diagnostic (multimodal)
-- Upload a photo of masonry, a relief or a facade. Gemini vision returns a structured report: probable monument (with confidence and alternative candidates), architectural elements, stylistic period, **surface degradation markers with severity ratings**, and **conservation guidance with explicit contraindications**, referenced to ICOMOS/UNESCO charters.
+- Upload a photo of masonry, a relief or a facade. Gemini vision returns a structured report:
+  - **Which place it is:** the probable monument, its **location** (district, province, country), its **historical significance**, heritage status, the visual clues behind the identification, a confidence level and alternative candidates.
+  - **Condition:** architectural elements, stylistic period, and **surface degradation markers with severity ratings**.
+  - **What to do and what to avoid:** **conservation guidance with explicit contraindications**, referenced to ICOMOS/UNESCO charters.
 - Every report carries a scientific limitations disclaimer: this is a preliminary visual screen, not a substitute for core sampling, ultrasound or structural testing.
 
 ### 3. Saved history (Firebase)
