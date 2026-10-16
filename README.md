@@ -1,7 +1,7 @@
 # 🏛️ HeritageLens AI
 
-> **Google Cloud AI Builder Cup 2026** - *Sustainability & Social Impact Track*
-> **Aligned with UN SDG 11.4** - *Strengthen efforts to protect and safeguard the world's cultural and natural heritage.*
+> **Google Cloud AI Builder Cup 2026** — *Sustainability & Social Impact Track*
+> **Aligned with UN SDG 11.4** — *Strengthen efforts to protect and safeguard the world's cultural and natural heritage.*
 > **Live prototype:** https://heritagelens-ai-93118475309.asia-southeast1.run.app
 
 HeritageLens AI helps archaeological curators, architectural conservators and field preservationists in Pakistan make better-informed conservation decisions. It combines **citation-grounded literature search** with **photo-based surface-decay diagnostics**, so a conservator can ask *"Why is cement plaster harmful at Dharmarajika Stupa?"* or upload a photo of a wall and get a structured, charter-aligned assessment in seconds.
@@ -24,8 +24,8 @@ Heritage is lost in two ways: the monuments decay, and the **knowledge about how
 
 ### 1. Heritage questions and literature search (RAG)
 - Your question is embedded with Google's Gemini embedding model and matched by **cosine similarity** against the curated knowledge base.
-- **Archive answers (conservation questions):** if a close match is found (similarity ≥ `SIMILARITY_THRESHOLD`, default **0.65**), **Gemini** answers *only* from the retrieved excerpts, at temperature 0, with inline citations in the form `(Author, Year, p. Page)`. The top sources are shown beside the answer with their similarity scores. Example: *"Why is cement plaster harmful to Dharmarajika Stupa?"*
-- **General heritage answers (everything else):** if the archive cannot answer, the app switches automatically to **Gemini with Google Search grounding**, labels the answer as live web search, and lists the sources it used. Example: *"What is Taxila?"*, *"Which language did the Buddha speak?"*, or *"What are the accepted principles for preserving ancient masonry?"*
+- **Archive answers (conservation questions):** if a close match is found (similarity ≥ `SIMILARITY_THRESHOLD`, default **0.65**), **Gemini** answers *only* from the retrieved excerpts, at temperature 0, with inline citations in the form `(Author, Year, p. Page)`. The top sources are shown beside the answer with their similarity scores. Example: *"How is salt damaging Moenjodaro and what conservation measures are used?"*
+- **General heritage answers (everything else):** if the archive cannot answer, the app switches automatically to **Gemini with Google Search grounding**, labels the answer as live web search, and lists the sources it used. Example: *"Which language did the Buddha speak?"* or *"What are the accepted principles for preserving ancient masonry?"*
 
 ### 2. Field photo diagnostic (multimodal)
 - Upload a photo of masonry, a relief or a facade. Gemini vision returns a structured report:
@@ -96,14 +96,14 @@ Uploaded photos are **not stored**; only the structured findings are saved.
 # Literature search
 curl -X POST "https://heritagelens-ai-93118475309.asia-southeast1.run.app/api/research" \
      -H "Content-Type: application/json" \
-     -d '{"query": "Why is cement plaster harmful to Dharmarajika Stupa in Taxila?"}'
+     -d '{"query": "How can salt damage be mitigated at Mohenjo-daro?"}'
 
 # Photo diagnostic
 curl -X POST "https://heritagelens-ai-93118475309.asia-southeast1.run.app/api/analyze-image" \
      -F "file=@/path/to/heritage_site_photo.jpg"
 ```
 
-The first returns `"mode": "archival_rag"` with a grounded answer, citations such as `(Department of Archaeology & Museums (DoAM) & UNESCO, 2024, p. 18)` and the retrieved sources. A question outside the knowledge base, such as *"What is the ancient city of Taxila?"*, returns `"mode": "web_search_fallback"`.
+The first returns `"mode": "archival_rag"` with a grounded answer, citations such as `(UNESCO World Heritage Committee, 2024, p. Decision 46 COM 7B.38)` and the retrieved sources. A question outside the knowledge base, such as *"Which language did the Buddha speak?"*, returns `"mode": "web_search_fallback"`.
 
 ---
 
@@ -172,7 +172,7 @@ In the Firebase console, enable the **Email/Password** and **Google** sign-in pr
 
 - **Preliminary screening only.** Photo analysis cannot assess internal structural stability, subsurface moisture, mortar condition at depth or seismic vulnerability, and does not replace on-site testing by qualified conservators.
 - **Monument identification is probabilistic.** The app reports a confidence level and alternative candidates; results should be verified against site records.
-- **Small seed knowledge base.** The curated corpus currently covers five conservation documents (Taxila, Moenjodaro, Jamal Garhi, Takht-i-Bahi and Lahore Fort). Questions outside it are answered through Google Search grounding and labelled as such. Extending the corpus is the main route to broader coverage.
+- **Small seed knowledge base.** The curated corpus currently holds seven entries covering Taxila, Moenjodaro, Jamal Garhi, Takht-i-Bahi and Lahore Fort: UNESCO World Heritage List entries, two UNESCO Committee state-of-conservation decisions, and a scholarly essay from Oxford's Gandhara Connections project. Each entry is a condensed excerpt that links to its source; web pages are cited by the year they were accessed (2026). Questions outside the corpus are answered through Google Search grounding and labelled as such. Extending the corpus is the main route to broader coverage.
 - **AI output can be wrong.** Citations are produced from retrieved excerpts, but users should check them against the source documents.
 - Recommendations follow the principles of reversibility and material compatibility in the ICOMOS Venice Charter (1964) and the ICOMOS Principles for the Analysis, Conservation and Structural Restoration of Architectural Heritage (2003).
 
