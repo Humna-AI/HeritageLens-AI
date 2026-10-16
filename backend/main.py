@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import google.generativeai as genai
 import numpy as np
-from fastapi import FastAPI, File, HTTPException, UploadFile, status
+from fastapi import BackgroundTasks, Depends, FastAPI, File, Header, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,19 +23,80 @@ logging.basicConfig(
 logger = logging.getLogger("heritagelens-backend")
 
 # ---------------------------------------------------------------------------
+# Firebase Admin: Firestore (history + usage stats) and Firebase Authentication
+# ---------------------------------------------------------------------------
+try:
+    import firebase_admin
+    from firebase_admin import auth as fb_auth
+    from firebase_admin import firestore as fb_firestore
+except ImportError:  # the app stays usable if the package is missing
+    firebase_admin = None
+    fb_auth = None
+    fb_firestore = None
+
+FIREBASE_PROJECT_ID = os.environ.get("FIREBASE_PROJECT_ID", "heritagelens-ai-pk-2026")
+_firestore_client = None
+
+
+def init_firebase():
+    """Initialise Firebase Admin once. Uses Application Default Credentials on Cloud Run.
+    Returns a Firestore client, or None if Firebase is unavailable (the app keeps working)."""
+    global _firestore_client
+    if _firestore_client is not None or firebase_admin is None:
+        return _firestore_client
+    try:
+        try:
+            firebase_admin.get_app()
+        except ValueError:
+            firebase_admin.initialize_app(options={"projectId": FIREBASE_PROJECT_ID})
+        _firestore_client = fb_firestore.client()
+        logger.info(f"Firebase Admin initialised for project '{FIREBASE_PROJECT_ID}'.")
+    except Exception as exc:
+        logger.warning(f"Firebase unavailable, history disabled: {exc}")
+    return _firestore_client
+
+
+async def get_optional_user(authorization: Optional[str] = Header(default=None)) -> Optional[Dict[str, Any]]:
+    """Return the signed-in Firebase user from a Bearer ID token, or None for guests."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        return None
+    if init_firebase() is None:
+        return None
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        decoded = fb_auth.verify_id_token(token)
+        return {"uid": decoded["uid"], "email": decoded.get("email"), "name": decoded.get("name")}
+    except Exception as exc:
+        logger.info(f"Ignoring invalid Firebase ID token: {exc}")
+        return None
+
+
+def save_activity(user: Optional[Dict[str, Any]], kind: str, summary: Dict[str, Any]) -> None:
+    """Write to Firestore: full history for signed-in users, and anonymous usage counters for everyone."""
+    db = init_firebase()
+    if db is None:
+        return
+    try:
+        now = fb_firestore.SERVER_TIMESTAMP
+        if user:
+            user_ref = db.collection("users").document(user["uid"])
+            user_ref.set({"email": user.get("email"), "name": user.get("name"), "last_seen": now}, merge=True)
+            user_ref.collection("history").add({**summary, "type": kind, "created": now})
+        db.collection("usage_stats").document("summary").set(
+            {f"total_{kind}": fb_firestore.Increment(1), "updated": now}, merge=True
+        )
+    except Exception as exc:
+        logger.warning(f"Could not write activity to Firestore: {exc}")
+
+# ---------------------------------------------------------------------------
 # Dynamic Gemini API Key & Model Configuration
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "data" / "knowledge_base.json"
 FRONTEND_DIR = BASE_DIR.parent / "frontend"
 
-def get_gemini_api_key() -> str:
-    """Retrieve Gemini API key dynamically from environment or local .env file."""
-    key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if key and key != "your_actual_gemini_api_key_here":
-        return key
-
-    # Check potential .env file locations
+def load_environment():
+    """Load configuration from .env files into os.environ if not already set."""
     env_locations = [
         BASE_DIR / ".env",
         BASE_DIR.parent / ".env",
@@ -50,19 +111,22 @@ def get_gemini_api_key() -> str:
                         clean_line = line.strip()
                         if clean_line and not clean_line.startswith("#") and "=" in clean_line:
                             k, v = clean_line.split("=", 1)
-                            if k.strip() == "GEMINI_API_KEY":
-                                candidate = v.strip().strip("'\"")
-                                if candidate and candidate != "your_actual_gemini_api_key_here":
-                                    os.environ["GEMINI_API_KEY"] = candidate
-                                    try:
-                                        genai.configure(api_key=candidate)
-                                    except Exception as e:
-                                        logger.warning(f"Error configuring genai: {e}")
-                                    return candidate
+                            key_name = k.strip()
+                            val = v.strip().strip("'\"")
+                            if key_name and key_name not in os.environ:
+                                os.environ[key_name] = val
             except Exception as e:
-                logger.warning(f"Could not parse {env_file}: {e}")
+                logger.warning(f"Could not load environment from {env_file}: {e}")
 
-    return ""
+load_environment()
+
+def get_gemini_api_key() -> str:
+    """Retrieve Gemini API key from environment."""
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not key:
+        load_environment()
+        key = os.environ.get("GEMINI_API_KEY", "").strip()
+    return key
 
 
 # Initial configure attempt
@@ -71,7 +135,7 @@ if initial_key:
     genai.configure(api_key=initial_key)
     logger.info("Gemini API key configured successfully.")
 else:
-    logger.warning("GEMINI_API_KEY is not set or contains placeholder value.")
+    logger.warning("GEMINI_API_KEY is not set.")
 
 EMBEDDING_MODEL = "models/gemini-embedding-001"
 GENERATION_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite").strip()
@@ -85,7 +149,6 @@ def generate_content_with_fallback(contents, generation_config=None, tools=None)
         "gemini-3.5-flash-lite",
         "gemini-flash-latest",
         "gemini-3.8-flash",
-        "gemini-1.5-flash",
     ]
     seen = set()
     ordered = [m for m in candidate_models if m and not (m in seen or seen.add(m))]
@@ -246,20 +309,32 @@ def cosine_similarity(vec_a: np.ndarray, matrix_b: np.ndarray) -> np.ndarray:
     return np.dot(matrix_b, vec_a)
 
 
-def initialize_knowledge_base():
-    """Load JSON knowledge base and pre-compute document embeddings."""
-    global knowledge_base, knowledge_embeddings
+def load_knowledge_base():
+    """Load JSON knowledge base file into memory instantly."""
+    global knowledge_base
     if not DATA_PATH.exists():
         logger.error(f"Knowledge base file not found at {DATA_PATH}")
         return
-
     try:
         with open(DATA_PATH, "r", encoding="utf-8") as f:
             knowledge_base = json.load(f)
         logger.info(f"Loaded {len(knowledge_base)} records from {DATA_PATH.name}")
+    except Exception as exc:
+        logger.error(f"Failed to load knowledge base JSON: {exc}")
 
+
+def initialize_knowledge_base():
+    """Load JSON knowledge base and pre-compute document embeddings."""
+    global knowledge_base, knowledge_embeddings
+    if not knowledge_base:
+        load_knowledge_base()
+
+    if not knowledge_base:
+        return
+
+    try:
         api_key = get_gemini_api_key()
-        if api_key and knowledge_base:
+        if api_key and (knowledge_embeddings is None or len(knowledge_embeddings) == 0):
             embeddings_list = []
             for doc in knowledge_base:
                 text_to_embed = (
@@ -270,7 +345,7 @@ def initialize_knowledge_base():
                 embeddings_list.append(compute_embedding(text_to_embed, is_query=False))
             knowledge_embeddings = np.array(embeddings_list, dtype=np.float32)
             logger.info(f"Generated embeddings for {len(knowledge_embeddings)} knowledge base chunks.")
-        else:
+        elif not api_key:
             logger.info("Deferred embedding generation until GEMINI_API_KEY is supplied.")
     except Exception as exc:
         logger.error(f"Failed to initialize knowledge base embeddings: {exc}")
@@ -279,10 +354,10 @@ def initialize_knowledge_base():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager for application startup and shutdown."""
-    initialize_knowledge_base()
+    # Preload JSON corpus immediately so Cloud Run starts in milliseconds
+    load_knowledge_base()
+    init_firebase()
     yield
-
-
 # ---------------------------------------------------------------------------
 # FastAPI Application Initialization
 # ---------------------------------------------------------------------------
@@ -382,6 +457,7 @@ async def health_check():
     return {
         "status": "healthy",
         "gemini_api_configured": bool(api_key),
+        "firestore_connected": init_firebase() is not None,
         "knowledge_base_size": len(knowledge_base),
         "embeddings_indexed": knowledge_embeddings is not None and len(knowledge_embeddings) > 0,
         "models": {
@@ -393,11 +469,27 @@ async def health_check():
 
 
 @app.post("/api/research", response_model=ResearchQueryResponse)
+async def research_endpoint(
+    payload: ResearchQueryRequest,
+    background_tasks: BackgroundTasks,
+    user: Optional[Dict[str, Any]] = Depends(get_optional_user),
+):
+    result = await academic_rag_research(payload)
+    background_tasks.add_task(save_activity, user, "research", {
+        "query": payload.query,
+        "mode": result.mode,
+        "answer": result.answer[:4000],
+        "similarity_score": result.similarity_score,
+        "source_count": len(result.sources),
+    })
+    return result
+
+
 async def academic_rag_research(payload: ResearchQueryRequest):
     """
     Academic Document RAG with Dynamic Fallback:
-    - If cosine similarity >= 0.35: Ground answers strictly against verified archival corpus.
-    - If cosine similarity < 0.35: Fall back to live web search via Google Search Grounding.
+    - If top cosine similarity >= SIMILARITY_THRESHOLD (default 0.65): Ground answers strictly in the curated archival corpus.
+    - If top cosine similarity < SIMILARITY_THRESHOLD: Fall back to live web search via Google Search Grounding.
     """
     global knowledge_embeddings, knowledge_base
 
@@ -511,7 +603,7 @@ async def academic_rag_research(payload: ResearchQueryRequest):
                 return ResearchQueryResponse(
                     status="success",
                     mode="archival_rag",
-                    badge_label="Synthesized from Verified Archival Corpus",
+                    badge_label="Synthesized from Curated Archival Corpus",
                     answer=answer_text,
                     similarity_score=round(top_score, 4),
                     sources=retrieved_sources,
@@ -631,7 +723,27 @@ async def academic_rag_research(payload: ResearchQueryRequest):
 
 
 @app.post("/api/analyze-image", response_model=ImageAnalysisResult)
-async def analyze_heritage_image(file: UploadFile = File(...)):
+async def analyze_image_endpoint(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    user: Optional[Dict[str, Any]] = Depends(get_optional_user),
+):
+    result = await analyze_heritage_image(file)
+    site = result.site_identification
+    # The photo itself is not stored; only the structured findings are saved.
+    background_tasks.add_task(save_activity, user, "diagnostic", {
+        "filename": file.filename,
+        "primary_candidate": site.primary_candidate if site else None,
+        "location": site.location if site else None,
+        "confidence": site.confidence if site else None,
+        "period": result.period_suggestion,
+        "summary": result.summary_assessment[:2000],
+        "markers": [{"name": m.marker_name, "severity": m.severity} for m in result.observable_deterioration_markers],
+    })
+    return result
+
+
+async def analyze_heritage_image(file: UploadFile):
     """
     Multimodal Preservation Analysis: Upload heritage site/artifact imagery to visually
     identify masonry & surface deterioration patterns (salts, biological growth, spalling)
@@ -751,6 +863,30 @@ async def analyze_heritage_image(file: UploadFile = File(...)):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Multimodal vision diagnostic failed: {str(exc)}",
         )
+
+
+@app.get("/api/history")
+def get_history(limit: int = 20, user: Optional[Dict[str, Any]] = Depends(get_optional_user)):
+    """Return the signed-in user's saved queries and diagnostics from Firestore (newest first)."""
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sign in to view your history.")
+    db = init_firebase()
+    if db is None:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Firestore is not available.")
+    docs = (
+        db.collection("users").document(user["uid"]).collection("history")
+        .order_by("created", direction=fb_firestore.Query.DESCENDING)
+        .limit(max(1, min(limit, 50)))
+        .stream()
+    )
+    items = []
+    for doc in docs:
+        rec = doc.to_dict()
+        rec["id"] = doc.id
+        created = rec.get("created")
+        rec["created"] = created.isoformat() if created else None
+        items.append(rec)
+    return {"items": items}
 
 
 # ---------------------------------------------------------------------------

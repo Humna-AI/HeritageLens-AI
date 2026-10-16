@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +8,9 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -53,51 +56,75 @@
       width: 6px;
       height: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: #0f172a;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #334155;
       border-radius: 4px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: #b8945a;
     }
+
     .sand-glass {
       background: rgba(21, 31, 50, 0.75);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(184, 148, 90, 0.2);
     }
+
     .amber-glow {
       box-shadow: 0 0 25px -5px rgba(184, 148, 90, 0.15);
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-sandstone-500 selection:text-slate-950">
+
+<body
+  class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-sandstone-500 selection:text-slate-950">
 
   <!-- TOP APP HEADER -->
   <header class="border-b border-sandstone-500/20 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sandstone-400 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-950/40 border border-sandstone-300/30">
+        <div
+          class="w-12 h-12 rounded-xl bg-gradient-to-br from-sandstone-400 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-950/40 border border-sandstone-300/30">
           <svg class="w-7 h-7 text-slate-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <h1 class="font-serif text-2xl font-bold tracking-wide text-sandstone-200">HeritageLens <span class="text-sandstone-400 font-sans text-xl font-light">AI</span></h1>
-            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 font-medium">UN SDG 11.4</span>
+            <h1 class="font-serif text-2xl font-bold tracking-wide text-sandstone-200">HeritageLens <span
+                class="text-sandstone-400 font-sans text-xl font-light">AI</span></h1>
+            <span
+              class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 font-medium">UN
+              SDG 11.4</span>
           </div>
-          <p class="text-xs text-slate-400 font-medium">Google Cloud AI Builder Cup 2026 • Cultural Heritage Preservation & Diagnostic Engine</p>
+          <p class="text-xs text-slate-400 font-medium">Google Cloud AI Builder Cup 2026 • Cultural Heritage
+            Preservation & Diagnostic Engine</p>
         </div>
       </div>
 
       <!-- Live API Status Indicator -->
       <div class="flex items-center space-x-4">
-        <div id="backend-status-pill" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
+        <div id="backend-status-pill"
+          class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
           <span id="backend-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
           <span id="backend-status-text">Connecting to Gemini...</span>
+        </div>
+        <button id="auth-signin-btn" onclick="handleSignIn()"
+          class="px-3 py-1.5 rounded-lg bg-sandstone-500 hover:bg-sandstone-400 text-slate-950 text-xs font-semibold transition">Sign
+          in</button>
+        <div id="auth-user-chip"
+          class="hidden items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
+          <img id="auth-user-photo" class="w-5 h-5 rounded-full" alt="" referrerpolicy="no-referrer" />
+          <span id="auth-user-name" class="max-w-[140px] truncate"></span>
+          <button onclick="handleSignOut()" class="text-sandstone-400 hover:text-sandstone-200 underline">Sign
+            out</button>
         </div>
       </div>
     </div>
@@ -107,30 +134,36 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
     <!-- HERO & TRACK BANNER -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-sandstone-950 border border-sandstone-500/30 p-6 md:p-8 shadow-2xl">
-      <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-sandstone-500/5 blur-3xl pointer-events-none"></div>
+    <div
+      class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-sandstone-950 border border-sandstone-500/30 p-6 md:p-8 shadow-2xl">
+      <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-sandstone-500/5 blur-3xl pointer-events-none">
+      </div>
       <div class="relative z-10 grid md:grid-cols-3 gap-6 items-center">
         <div class="md:col-span-2 space-y-2">
-          <div class="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-sandstone-400 bg-sandstone-950/80 px-3 py-1 rounded-full border border-sandstone-500/20">
+          <div
+            class="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-sandstone-400 bg-sandstone-950/80 px-3 py-1 rounded-full border border-sandstone-500/20">
             <span>🏛️ AI for Cultural Heritage Resilience</span>
           </div>
-          <h2 class="font-serif text-2xl md:text-3xl font-bold text-sandstone-100">Preserving Archaeological Legacies through Multimodal Intelligence</h2>
+          <h2 class="font-serif text-2xl md:text-3xl font-bold text-sandstone-100">Preserving Archaeological Legacies
+            through Multimodal Intelligence</h2>
           <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
-            HeritageLens AI pairs deterministic peer-reviewed literature RAG with visual decay diagnostics to assist conservators, researchers, and UNESCO missions in safeguarding ancient masonry against climate stress, salt attack, and inappropriate restoration.
+            HeritageLens AI pairs curated conservation literature RAG with visual decay diagnostics to assist
+            conservators, researchers, and UNESCO missions in safeguarding ancient masonry against climate stress, salt
+            attack, and inappropriate restoration.
           </p>
         </div>
         <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-4 rounded-xl border border-sandstone-500/20 text-center">
           <div class="p-2 bg-slate-900/80 rounded-lg">
-            <span class="block font-serif text-xl font-bold text-sandstone-300">0%</span>
-            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Hallucination RAG</span>
+            <span class="block font-serif text-xl font-bold text-sandstone-300">Cited</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Citation-grounded RAG</span>
           </div>
           <div class="p-2 bg-slate-900/80 rounded-lg">
-            <span class="block font-serif text-xl font-bold text-emerald-400">100%</span>
-            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Charter Aligned</span>
+            <span class="block font-serif text-xl font-bold text-emerald-400">ICOMOS</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">UNESCO-aligned</span>
           </div>
           <div class="p-2 bg-slate-900/80 rounded-lg">
             <span class="block font-serif text-xl font-bold text-amber-300">Cosine</span>
-            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Embedding-004</span>
+            <span class="text-[11px] text-slate-400 uppercase tracking-tight">Embedding-001</span>
           </div>
           <div class="p-2 bg-slate-900/80 rounded-lg">
             <span class="block font-serif text-xl font-bold text-sandstone-300">3.1 Flash Lite</span>
@@ -142,18 +175,31 @@
 
     <!-- NAVIGATION TABS -->
     <div class="flex border-b border-slate-800 space-x-4">
-      <button id="tab-rag-btn" onclick="switchTab('rag')" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-sandstone-400 text-sandstone-200 flex items-center space-x-2 transition-all">
+      <button id="tab-rag-btn" onclick="switchTab('rag')"
+        class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-sandstone-400 text-sandstone-200 flex items-center space-x-2 transition-all">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
         <span>Academic Literature RAG</span>
       </button>
 
-      <button id="tab-vision-btn" onclick="switchTab('vision')" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all">
+      <button id="tab-vision-btn" onclick="switchTab('vision')"
+        class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         <span>Field Photo Diagnostic</span>
+      </button>
+
+      <button id="tab-history-btn" onclick="switchTab('history')"
+        class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>My History</span>
       </button>
     </div>
 
@@ -170,16 +216,22 @@
               <span>📚 Query Corpus</span>
             </h3>
             <p class="text-xs text-slate-400 leading-normal">
-              Queries are embedded with <code class="text-sandstone-300 font-mono">text-embedding-004</code> and matched via cosine similarity strictly against our peer-reviewed conservation archive.
+              Queries are embedded with <code class="text-sandstone-300 font-mono">gemini-embedding-001</code> and
+              matched via cosine similarity against our curated conservation archive.
             </p>
 
             <form id="rag-form" onsubmit="handleRagSubmit(event)" class="space-y-4">
               <div>
-                <label for="rag-query" class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Research Question</label>
-                <textarea id="rag-query" rows="4" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sandstone-400 focus:ring-1 focus:ring-sandstone-400 transition" placeholder="e.g., Why is Portland cement plaster harmful to Taxila's Dharmarajika Stupa?"></textarea>
+                <label for="rag-query"
+                  class="block text-xs font-semibold uppercase text-slate-300 tracking-wider mb-2">Research
+                  Question</label>
+                <textarea id="rag-query" rows="4" required
+                  class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sandstone-400 focus:ring-1 focus:ring-sandstone-400 transition"
+                  placeholder="e.g., Why is Portland cement plaster harmful to Taxila's Dharmarajika Stupa?"></textarea>
               </div>
 
-              <button type="submit" id="rag-submit-btn" class="w-full bg-gradient-to-r from-sandstone-500 to-amber-600 hover:from-sandstone-400 hover:to-amber-500 text-slate-950 font-semibold px-4 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm disabled:opacity-50">
+              <button type="submit" id="rag-submit-btn"
+                class="w-full bg-gradient-to-r from-sandstone-500 to-amber-600 hover:from-sandstone-400 hover:to-amber-500 text-slate-950 font-semibold px-4 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm disabled:opacity-50">
                 <svg id="rag-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
@@ -190,15 +242,20 @@
 
             <!-- Sample Prompts -->
             <div class="pt-3 border-t border-slate-800 space-y-2">
-              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Sample Archaeological Queries:</span>
+              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Sample
+                Archaeological Queries:</span>
               <div class="space-y-1.5">
-                <button onclick="setRagSample('Why is cement plaster harmful to Dharmarajika Stupa in Taxila?')" class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sandstone-300 p-2.5 rounded-lg border border-slate-800 transition">
+                <button onclick="setRagSample('Why is cement plaster harmful to Dharmarajika Stupa in Taxila?')"
+                  class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sandstone-300 p-2.5 rounded-lg border border-slate-800 transition">
                   🏛️ Taxila: Capillary moisture & cement plaster (Archival RAG)
                 </button>
-                <button onclick="setRagSample('How can salt efflorescence and subsoil moisture decay be mitigated at Mohenjo-daro?')" class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sandstone-300 p-2.5 rounded-lg border border-slate-800 transition">
+                <button
+                  onclick="setRagSample('How can salt efflorescence and subsoil moisture decay be mitigated at Mohenjo-daro?')"
+                  class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sandstone-300 p-2.5 rounded-lg border border-slate-800 transition">
                   🧱 Mohenjo-daro: Salt attack & mud-slurry capping (Archival RAG)
                 </button>
-                <button onclick="setRagSample('What is the ancient city of Taxila and its cultural significance?')" class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 p-2.5 rounded-lg border border-slate-800 transition">
+                <button onclick="setRagSample('What is the ancient city of Taxila and its cultural significance?')"
+                  class="w-full text-left text-xs bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 p-2.5 rounded-lg border border-slate-800 transition">
                   🌐 General Scope: What is Taxila? (Live Web Search Fallback)
                 </button>
               </div>
@@ -212,11 +269,13 @@
           <div class="sand-glass rounded-2xl p-6 space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 class="font-serif text-lg font-semibold text-sandstone-200">Grounded Synthesis</h3>
-              <span id="rag-status-tag" class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Awaiting Query</span>
+              <span id="rag-status-tag" class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Awaiting
+                Query</span>
             </div>
 
-            <div id="rag-result-container" class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-3 min-h-[140px] flex items-center justify-center text-slate-500">
-              Submit a research query to retrieve peer-reviewed conservation answers grounded strictly in the knowledge base.
+            <div id="rag-result-container"
+              class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed space-y-3 min-h-[140px] flex items-center justify-center text-slate-500">
+              Submit a research query to retrieve conservation answers grounded strictly in the knowledge base.
             </div>
           </div>
 
@@ -226,7 +285,8 @@
               <span id="rag-sources-header">📑 Grounded Literature Chunks (Top 2 Retrieved)</span>
             </h4>
             <div id="rag-sources-grid" class="grid sm:grid-cols-2 gap-4">
-              <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-xs text-slate-500 text-center col-span-2 py-8">
+              <div
+                class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-xs text-slate-500 text-center col-span-2 py-8">
                 No citations retrieved yet.
               </div>
             </div>
@@ -242,13 +302,17 @@
     <section id="tab-vision-content" class="hidden space-y-6">
 
       <!-- Prominent Mandatory Disclaimer Banner -->
-      <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 flex items-start space-x-3 text-xs leading-relaxed">
+      <div
+        class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 text-amber-200 flex items-start space-x-3 text-xs leading-relaxed">
         <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
         <div>
-          <strong class="font-semibold block text-amber-300 uppercase tracking-wide">Scientific Limitations Disclosure:</strong>
-          Preliminary visual observation only; not a substitute for on-site physical core sampling, ultrasound pulse velocity, moisture sensors, or structural shear testing.
+          <strong class="font-semibold block text-amber-300 uppercase tracking-wide">Scientific Limitations
+            Disclosure:</strong>
+          Preliminary visual observation only; not a substitute for on-site physical core sampling, ultrasound pulse
+          velocity, moisture sensors, or structural shear testing.
         </div>
       </div>
 
@@ -263,21 +327,28 @@
             </p>
 
             <form id="vision-form" onsubmit="handleVisionSubmit(event)" class="space-y-4">
-              <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-sandstone-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/50 flex flex-col items-center justify-center space-y-3 min-h-[200px]">
-                <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(event)" />
+              <div id="drop-zone"
+                class="border-2 border-dashed border-slate-700 hover:border-sandstone-400 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/50 flex flex-col items-center justify-center space-y-3 min-h-[200px]">
+                <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp" class="hidden"
+                  onchange="previewImage(event)" />
                 <div id="upload-placeholder" class="space-y-2">
-                  <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto text-sandstone-400">
+                  <div
+                    class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto text-sandstone-400">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div class="text-xs text-slate-300 font-medium">Click or drag & drop photo</div>
                   <div class="text-[11px] text-slate-500">Supports JPG, PNG, WEBP (Max 10MB)</div>
                 </div>
-                <img id="image-preview" class="hidden max-h-48 rounded-lg object-contain border border-slate-700 shadow-md" alt="Uploaded Preview" />
+                <img id="image-preview"
+                  class="hidden max-h-48 rounded-lg object-contain border border-slate-700 shadow-md"
+                  alt="Uploaded Preview" />
               </div>
 
-              <button type="submit" id="vision-submit-btn" disabled class="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-semibold px-4 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+              <button type="submit" id="vision-submit-btn" disabled
+                class="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-semibold px-4 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm disabled:opacity-40 disabled:cursor-not-allowed">
                 <svg id="vision-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
@@ -293,13 +364,15 @@
           <div id="vision-results-wrapper" class="sand-glass rounded-2xl p-6 space-y-6">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 class="font-serif text-lg font-semibold text-sandstone-200">Diagnostic Findings</h3>
-              <span id="vision-status-tag" class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Ready for Image</span>
+              <span id="vision-status-tag" class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Ready for
+                Image</span>
             </div>
 
             <!-- Empty State -->
             <div id="vision-empty-state" class="py-16 text-center text-slate-500 text-sm space-y-2">
               <svg class="w-12 h-12 mx-auto text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <p>Upload a heritage masonry photograph to run multimodal degradation analysis.</p>
             </div>
@@ -308,38 +381,47 @@
             <div id="vision-results-content" class="hidden space-y-6">
 
               <!-- Probable Monument Candidate Card -->
-              <div id="vision-monument-card" class="hidden p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-850 to-sandstone-950/80 border border-sandstone-500/40 space-y-4 shadow-xl">
+              <div id="vision-monument-card"
+                class="hidden p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-850 to-sandstone-950/80 border border-sandstone-500/40 space-y-4 shadow-xl">
                 <div class="flex flex-wrap items-center justify-between gap-2 border-b border-sandstone-500/20 pb-3">
                   <div class="flex items-center space-x-2">
-                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30 uppercase tracking-wider font-semibold">
+                    <span
+                      class="text-xs px-2.5 py-0.5 rounded-full bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30 uppercase tracking-wider font-semibold">
                       🏛️ Identified Monument Candidate
                     </span>
-                    <span id="vision-site-status" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700"></span>
+                    <span id="vision-site-status"
+                      class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700"></span>
                   </div>
-                  <div id="vision-site-confidence-badge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full border"></div>
+                  <div id="vision-site-confidence-badge"
+                    class="text-xs font-semibold px-2.5 py-0.5 rounded-full border"></div>
                 </div>
 
                 <div class="space-y-1">
-                  <h4 id="vision-site-primary" class="font-serif text-xl font-bold text-sandstone-100 tracking-wide"></h4>
-                  <div id="vision-site-location" class="text-xs text-sandstone-300/90 flex items-center space-x-1.5 font-medium">
+                  <h4 id="vision-site-primary" class="font-serif text-xl font-bold text-sandstone-100 tracking-wide">
+                  </h4>
+                  <div id="vision-site-location"
+                    class="text-xs text-sandstone-300/90 flex items-center space-x-1.5 font-medium">
                     <span>📍</span>
                     <span id="vision-site-location-text"></span>
                   </div>
                 </div>
 
                 <div class="space-y-2">
-                  <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Visual Diagnostic Clues:</span>
+                  <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Visual
+                    Diagnostic Clues:</span>
                   <div id="vision-site-clues" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
                 <!-- Plausible Alternatives & Historical Context -->
                 <div class="grid sm:grid-cols-2 gap-3 pt-2 text-xs">
                   <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-1">
-                    <span class="font-semibold text-slate-400 block text-[11px] uppercase tracking-wider">Alternative Regional Candidates:</span>
+                    <span class="font-semibold text-slate-400 block text-[11px] uppercase tracking-wider">Alternative
+                      Regional Candidates:</span>
                     <div id="vision-site-alternatives" class="text-slate-300"></div>
                   </div>
                   <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-1">
-                    <span class="font-semibold text-slate-400 block text-[11px] uppercase tracking-wider">Historical Significance:</span>
+                    <span class="font-semibold text-slate-400 block text-[11px] uppercase tracking-wider">Historical
+                      Significance:</span>
                     <p id="vision-site-context" class="text-slate-300 leading-snug line-clamp-3"></p>
                   </div>
                 </div>
@@ -366,13 +448,15 @@
 
               <!-- Degradation Markers -->
               <div class="space-y-3">
-                <h4 class="text-xs font-semibold uppercase tracking-wider text-amber-400">Observable Surface Degradation Markers</h4>
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-amber-400">Observable Surface Degradation
+                  Markers</h4>
                 <div id="vision-markers-list" class="space-y-3"></div>
               </div>
 
               <!-- Conservation Guidance -->
               <div class="space-y-3">
-                <h4 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Charter-Aligned Conservation Guidance</h4>
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Charter-Aligned Conservation
+                  Guidance</h4>
                 <div id="vision-guidance-list" class="space-y-3"></div>
               </div>
             </div>
@@ -380,6 +464,26 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: SAVED HISTORY (Firestore, per signed-in user) -->
+    <!-- ================================================================= -->
+    <section id="tab-history-content" class="hidden space-y-6">
+      <div class="sand-glass rounded-2xl p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="font-serif text-lg font-semibold text-sandstone-200">My Saved History</h3>
+          <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">Stored in Cloud Firestore</span>
+        </div>
+        <div id="history-signed-out" class="py-12 text-center text-slate-500 text-sm space-y-3">
+          <p>Sign in to save and revisit your literature searches and photo diagnostics.</p>
+          <button onclick="handleSignIn()"
+            class="px-4 py-2 rounded-lg bg-sandstone-500 hover:bg-sandstone-400 text-slate-950 text-xs font-semibold transition">Sign
+            in</button>
+        </div>
+        <div id="history-status" class="hidden py-8 text-center text-slate-500 text-sm"></div>
+        <div id="history-list" class="hidden space-y-3"></div>
       </div>
     </section>
 
@@ -396,6 +500,72 @@
       </div>
     </div>
   </footer>
+
+  <!-- SIGN-IN MODAL (email/password or Google) -->
+  <div id="auth-modal"
+    class="hidden fixed inset-0 z-[100] items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
+    <div class="sand-glass w-full max-w-sm rounded-2xl p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-serif text-lg font-semibold text-sandstone-200">Sign in to HeritageLens</h3>
+        <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-200 text-lg leading-none"
+          aria-label="Close">&times;</button>
+      </div>
+      <form id="auth-email-form" onsubmit="event.preventDefault(); submitEmailAuth('signin');" class="space-y-3">
+        <input id="auth-email" type="email" required autocomplete="email" placeholder="Email address"
+          class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sandstone-400" />
+        <input id="auth-password" type="password" required minlength="6" autocomplete="current-password"
+          placeholder="Password (min. 6 characters)"
+          class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sandstone-400" />
+        <div id="auth-error"
+          class="hidden text-xs text-rose-300 bg-rose-950/40 border border-rose-900/40 rounded-lg px-3 py-2"></div>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="submit" id="auth-signin-submit"
+            class="bg-sandstone-500 hover:bg-sandstone-400 text-slate-950 font-semibold px-3 py-2.5 rounded-xl text-sm transition disabled:opacity-50">Sign
+            in</button>
+          <button type="button" id="auth-signup-submit" onclick="submitEmailAuth('signup')"
+            class="bg-slate-800 hover:bg-slate-700 text-sandstone-200 border border-slate-700 font-semibold px-3 py-2.5 rounded-xl text-sm transition disabled:opacity-50">Create
+            account</button>
+        </div>
+      </form>
+      <div class="flex items-center space-x-3 text-[11px] text-slate-500">
+        <div class="flex-1 border-t border-slate-800"></div><span>or</span>
+        <div class="flex-1 border-t border-slate-800"></div>
+      </div>
+      <button onclick="googleSignIn()"
+        class="w-full bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-medium px-3 py-2.5 rounded-xl text-sm transition">Continue
+        with Google</button>
+    </div>
+  </div>
+
+  <!-- FIREBASE AUTHENTICATION (web config is public by design) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsVmQrWyjNKxc885yE3NuUA-5BeWpfr7M",
+      authDomain: "heritagelens-ai-pk-2026.firebaseapp.com",
+      projectId: "heritagelens-ai-pk-2026",
+      storageBucket: "heritagelens-ai-pk-2026.firebasestorage.app",
+      messagingSenderId: "93118475309",
+      appId: "1:93118475309:web:f31b1c2fba3be8b78e5ca4"
+    };
+
+    const auth = getAuth(initializeApp(firebaseConfig));
+    const provider = new GoogleAuthProvider();
+
+    window.hlAuth = {
+      getToken: async () => (auth.currentUser ? auth.currentUser.getIdToken() : null),
+      signIn: () => signInWithPopup(auth, provider),
+      signInEmail: (email, password) => signInWithEmailAndPassword(auth, email, password),
+      signUpEmail: (email, password) => createUserWithEmailAndPassword(auth, email, password),
+      signOut: () => signOut(auth)
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      window.dispatchEvent(new CustomEvent('hl-auth', { detail: { user } }));
+    });
+  </script>
 
   <!-- CLIENT JAVASCRIPT LOGIC -->
   <script>
@@ -418,7 +588,8 @@
           const data = await res.json();
           if (data.gemini_api_configured) {
             statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-            statusText.textContent = `Connected (Gemini 1.5 & text-embedding-004)`;
+            const llmName = data.models?.llm || 'Gemini';
+            statusText.textContent = `Connected (${llmName} & embeddings)`;
           } else {
             statusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
             statusText.textContent = 'Server Ready (GEMINI_API_KEY missing)';
@@ -432,23 +603,184 @@
       }
     }
 
-    // Tab Switching
-    function switchTab(tab) {
-      const ragBtn = document.getElementById('tab-rag-btn');
-      const visionBtn = document.getElementById('tab-vision-btn');
-      const ragContent = document.getElementById('tab-rag-content');
-      const visionContent = document.getElementById('tab-vision-content');
+    // Auth helpers (Firebase Authentication)
+    async function authHeaders() {
+      try {
+        const token = window.hlAuth ? await window.hlAuth.getToken() : null;
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+      } catch (e) {
+        return {};
+      }
+    }
 
-      if (tab === 'rag') {
-        ragBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-sandstone-400 text-sandstone-200 flex items-center space-x-2 transition-all';
-        visionBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all';
-        ragContent.classList.remove('hidden');
-        visionContent.classList.add('hidden');
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    function openAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      document.getElementById('auth-error').classList.add('hidden');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.getElementById('auth-email').focus();
+    }
+
+    function closeAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function showAuthError(message) {
+      const box = document.getElementById('auth-error');
+      box.textContent = message;
+      box.classList.remove('hidden');
+    }
+
+    function friendlyAuthError(err) {
+      const messages = {
+        'auth/invalid-credential': 'Incorrect email or password.',
+        'auth/wrong-password': 'Incorrect email or password.',
+        'auth/user-not-found': 'No account found for this email. Choose "Create account".',
+        'auth/email-already-in-use': 'An account already exists for this email. Choose "Sign in".',
+        'auth/weak-password': 'Password must be at least 6 characters.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
+        'auth/operation-not-allowed': 'This sign-in method is not enabled in Firebase.'
+      };
+      return messages[err && err.code] || `Sign-in failed: ${err && err.message ? err.message : 'unknown error'}`;
+    }
+
+    async function submitEmailAuth(mode) {
+      if (!window.hlAuth) { showAuthError('Sign-in is still loading. Please try again in a moment.'); return; }
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      if (!email || !password) { showAuthError('Enter your email and password.'); return; }
+      const buttons = [document.getElementById('auth-signin-submit'), document.getElementById('auth-signup-submit')];
+      buttons.forEach((b) => b.disabled = true);
+      try {
+        if (mode === 'signup') await window.hlAuth.signUpEmail(email, password);
+        else await window.hlAuth.signInEmail(email, password);
+        document.getElementById('auth-password').value = '';
+      } catch (err) {
+        showAuthError(friendlyAuthError(err));
+      } finally {
+        buttons.forEach((b) => b.disabled = false);
+      }
+    }
+
+    async function googleSignIn() {
+      if (!window.hlAuth) { showAuthError('Sign-in is still loading. Please try again in a moment.'); return; }
+      try { await window.hlAuth.signIn(); }
+      catch (err) { if (err && err.code !== 'auth/popup-closed-by-user') showAuthError(friendlyAuthError(err)); }
+    }
+
+    function handleSignIn() { openAuthModal(); }
+
+    async function handleSignOut() {
+      if (window.hlAuth) await window.hlAuth.signOut();
+    }
+
+    let currentUser = null;
+    window.addEventListener('hl-auth', (e) => {
+      currentUser = e.detail.user;
+      if (currentUser) closeAuthModal();
+      const signInBtn = document.getElementById('auth-signin-btn');
+      const chip = document.getElementById('auth-user-chip');
+      if (currentUser) {
+        signInBtn.classList.add('hidden');
+        chip.classList.remove('hidden');
+        chip.classList.add('flex');
+        document.getElementById('auth-user-name').textContent = currentUser.displayName || currentUser.email || 'Signed in';
+        const photo = document.getElementById('auth-user-photo');
+        if (currentUser.photoURL) { photo.src = currentUser.photoURL; photo.classList.remove('hidden'); } else { photo.classList.add('hidden'); }
       } else {
-        visionBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-emerald-400 text-emerald-300 flex items-center space-x-2 transition-all';
-        ragBtn.className = 'tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition-all';
-        visionContent.classList.remove('hidden');
-        ragContent.classList.add('hidden');
+        signInBtn.classList.remove('hidden');
+        chip.classList.add('hidden');
+        chip.classList.remove('flex');
+      }
+      if (!document.getElementById('tab-history-content').classList.contains('hidden')) loadHistory();
+    });
+
+    // Tab Switching (RAG, Vision, History)
+    const TAB_ACTIVE = {
+      rag: 'border-sandstone-400 text-sandstone-200',
+      vision: 'border-emerald-400 text-emerald-300',
+      history: 'border-amber-400 text-amber-300'
+    };
+    const TAB_IDLE = 'border-transparent text-slate-400 hover:text-slate-200';
+
+    function switchTab(tab) {
+      ['rag', 'vision', 'history'].forEach((t) => {
+        const btn = document.getElementById(`tab-${t}-btn`);
+        const content = document.getElementById(`tab-${t}-content`);
+        btn.className = `tab-btn px-6 py-3 font-medium text-sm border-b-2 ${t === tab ? TAB_ACTIVE[t] : TAB_IDLE} flex items-center space-x-2 transition-all`;
+        content.classList.toggle('hidden', t !== tab);
+      });
+      if (tab === 'history') loadHistory();
+    }
+
+    // Load the signed-in user's saved history from Firestore (via the backend)
+    async function loadHistory() {
+      const signedOut = document.getElementById('history-signed-out');
+      const statusEl = document.getElementById('history-status');
+      const listEl = document.getElementById('history-list');
+
+      if (!currentUser) {
+        signedOut.classList.remove('hidden');
+        statusEl.classList.add('hidden');
+        listEl.classList.add('hidden');
+        return;
+      }
+      signedOut.classList.add('hidden');
+      listEl.classList.add('hidden');
+      statusEl.classList.remove('hidden');
+      statusEl.textContent = 'Loading your saved history...';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/history`, { headers: await authHeaders() });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: 'Could not load history' }));
+          throw new Error(err.detail || 'Could not load history');
+        }
+        const data = await res.json();
+        if (!data.items || data.items.length === 0) {
+          statusEl.textContent = 'Nothing saved yet. Run a literature search or a photo diagnostic and it will appear here.';
+          return;
+        }
+        statusEl.classList.add('hidden');
+        listEl.classList.remove('hidden');
+        listEl.innerHTML = data.items.map((item) => {
+          const when = item.created ? new Date(item.created).toLocaleString() : '';
+          if (item.type === 'diagnostic') {
+            const markers = (item.markers || []).map((m) => `${escapeHtml(m.name)} (${escapeHtml(m.severity)})`).join(', ');
+            return `
+              <div class="p-4 rounded-xl bg-slate-900/80 border border-emerald-900/40 space-y-2">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 font-medium">Photo Diagnostic</span>
+                  <span class="text-slate-500">${escapeHtml(when)}</span>
+                </div>
+                <div class="text-sm font-semibold text-sandstone-100">${escapeHtml(item.primary_candidate || 'Site not identified')}${item.confidence ? ` <span class="text-xs font-normal text-slate-400">· ${escapeHtml(item.confidence)} confidence</span>` : ''}</div>
+                ${item.location ? `<div class="text-xs text-slate-400">${escapeHtml(item.location)}</div>` : ''}
+                <p class="text-xs text-slate-300 leading-relaxed">${escapeHtml(item.summary || '')}</p>
+                ${markers ? `<div class="text-[11px] text-amber-300/90"><strong>Markers:</strong> ${markers}</div>` : ''}
+              </div>`;
+          }
+          const modeLabel = item.mode === 'archival_rag' ? 'Archival RAG' : 'Live Web Search';
+          return `
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-sandstone-500/20 space-y-2">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30 font-medium">Literature Search · ${modeLabel}</span>
+                <span class="text-slate-500">${escapeHtml(when)}</span>
+              </div>
+              <div class="text-sm font-semibold text-sandstone-100">${escapeHtml(item.query || '')}</div>
+              <p class="text-xs text-slate-300 leading-relaxed line-clamp-4">${escapeHtml(item.answer || '')}</p>
+            </div>`;
+        }).join('');
+      } catch (err) {
+        statusEl.classList.remove('hidden');
+        listEl.classList.add('hidden');
+        statusEl.textContent = `Could not load history: ${err.message}`;
       }
     }
 
@@ -481,7 +813,7 @@
       try {
         const response = await fetch(`${API_BASE}/api/research`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
           body: JSON.stringify({ query })
         });
 
@@ -514,7 +846,7 @@
 
         // 1. Dynamically update top-right badge based on mode
         if (data.mode === 'archival_rag') {
-          statusTag.textContent = data.badge_label || 'Synthesized from Verified Archival Corpus';
+          statusTag.textContent = data.badge_label || 'Synthesized from Curated Archival Corpus';
           statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-500/30 font-medium flex items-center space-x-1.5';
           if (sourcesHeader) {
             sourcesHeader.textContent = `📑 Grounded Literature Chunks (Local Similarity: ${(data.similarity_score * 100).toFixed(1)}%)`;
@@ -658,7 +990,7 @@
       submitBtn.disabled = true;
       spinner.classList.remove('hidden');
       btnText.textContent = 'Analyzing Surface Morphology...';
-      statusTag.textContent = 'Processing Image with Gemini 1.5 Flash...';
+      statusTag.textContent = 'Processing Image with Gemini Multimodal Vision...';
       statusTag.className = 'text-xs px-2.5 py-1 rounded-md bg-sandstone-950 text-sandstone-300 border border-sandstone-500/30';
 
       const formData = new FormData();
@@ -667,6 +999,7 @@
       try {
         const response = await fetch(`${API_BASE}/api/analyze-image`, {
           method: 'POST',
+          headers: await authHeaders(),
           body: formData
         });
 
@@ -798,4 +1131,5 @@
     });
   </script>
 </body>
+
 </html>
