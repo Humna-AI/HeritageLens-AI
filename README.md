@@ -1,7 +1,7 @@
 # 🏛️ HeritageLens AI
 
-> **Google Cloud AI Builder Cup 2026** — *Sustainability & Social Impact Track*
-> **Aligned with UN SDG 11.4** — *Strengthen efforts to protect and safeguard the world's cultural and natural heritage.*
+> **Google Cloud AI Builder Cup 2026** - *Sustainability & Social Impact Track*
+> **Aligned with UN SDG 11.4** - *Strengthen efforts to protect and safeguard the world's cultural and natural heritage.*
 > **Live prototype:** https://heritagelens-ai-93118475309.asia-southeast1.run.app
 
 HeritageLens AI helps archaeological curators, architectural conservators and field preservationists in Pakistan make better-informed conservation decisions. It combines **citation-grounded literature search** with **photo-based surface-decay diagnostics**, so a conservator can ask *"Why is cement plaster harmful at Dharmarajika Stupa?"* or upload a photo of a wall and get a structured, charter-aligned assessment in seconds.
