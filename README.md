@@ -17,7 +17,7 @@
 ### 1. Academic Document RAG (*Zero-Hallucination Retrieval-Augmented Generation*)
 - **Semantic Vector Store:** Queries are vectorized using Google's `models/text-embedding-004` (with fallback to `models/gemini-embedding-001`).
 - **Verified Archival Corpus:** Computes cosine similarity over a curated dataset of peer-reviewed conservation papers, UNESCO charter declarations (*Venice Charter 1964, Burra Charter*), and archaeological excavation reports.
-- **Grounded Synthesis:** Powered by **Gemini 1.5 Flash** under strict zero-temperature grounding constraints requiring exact inline academic citations `(Author, Year, p. Page)`.
+- **Grounded Synthesis:** Powered by **Gemini 3.1 Flash Lite** under strict zero-temperature grounding constraints requiring exact inline academic citations `(Author, Year, p. Page)`.
 - **Live Search Fallback:** If query similarity falls below threshold or local records lack coverage, it seamlessly transitions to **Google Search Grounding** while retaining source attribution.
 
 ### 2. Multimodal Preservation Analysis (*Computer Vision Diagnostic*)
@@ -37,7 +37,7 @@
 | **Image Registry** | **Google Container Registry (GCR)** | Automated container artifact management |
 | **Secrets Management** | **Google Secret Manager** | Secure, zero-plaintext storage for `GEMINI_API_KEY` |
 | **Build Pipeline** | **Google Cloud Build** | Remote container build and image packaging |
-| **AI / LLM Engine** | **Gemini 1.5 Flash** (`google-generativeai`) | Grounded RAG synthesis, web search grounding, multimodal vision analysis |
+| **AI / LLM Engine** | **Gemini 3.1 Flash Lite** (`google-generativeai`) | Grounded RAG synthesis, web search grounding, multimodal vision analysis |
 | **Embeddings** | `text-embedding-004` / `gemini-embedding-001` | High-dimensional semantic vector indexing |
 | **Backend Framework** | **FastAPI** + **Uvicorn** | High-performance Python async web framework |
 | **Frontend UI** | **HTML5** + **Tailwind CSS** + **JavaScript** | Single-container, sandstone/slate aesthetic UI dashboard |
