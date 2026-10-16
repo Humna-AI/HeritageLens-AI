@@ -6,3 +6,5 @@ __pycache__
 .gitignore
 .env
 backend/.env
+serviceAccount*.json
+*-firebase-adminsdk-*.json
