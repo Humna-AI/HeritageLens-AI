@@ -115,7 +115,7 @@ gcloud run deploy heritagelens-ai \
 
 ```bash
 # Clone repository
-git clone [https://github.com/your-username/heritagelens-ai.git](https://github.com/your-username/heritagelens-ai.git)
+git clone https://github.com/humna-ai/heritagelens-ai.git
 cd heritagelens-ai
 
 # Create & activate virtual environment
